@@ -1,3 +1,12 @@
 .active {
   background-color: #686868;
 }
+
+.messages-section::before {
+  content: "";
+  background-image: url(chat-bg-pattern-dark.ad38368a9e8140d0ac7d.png);
+  background-size: contain;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
