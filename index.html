@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chill Chat</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-[#2c2c2e] flex justify-center items-center h-screen">
+    <div
+      class="parent bg-[#3a3a3c] w-100 rounded-xl p-8 shadow-2xl outline-1 outline-[#48484a]"
+    >
+      <div class="title text-white text-center">
+        <h1 class="text-2xl font-bold">Chill Chat</h1>
+        <p class="text-[#98989d]">Connect with friends instantly</p>
+      </div>
+      <div class="inputs flex flex-col text-white mt-5">
+        <label for="email" class="my-3">Email</label>
+        <input
+          id="email"
+          class="bg-[#2c2c2e] p-3 py-2 rounded-lg outline-1 outline-[#48484a] focus:outline-[#6366f1] transition-all duration-300"
+          type="text"
+          placeholder="Enter your email"
+        />
+        <label for="pass" class="my-3">Password</label>
+        <input
+          id="pass"
+          class="bg-[#2c2c2e] p-3 py-2 rounded-lg outline-1 outline-[#48484a] focus:outline-[#6366f1] transition-all duration-300"
+          type="password"
+          placeholder="Enter your password"
+        />
+
+        <button class="sign-in bg-[#6366f1] p-3 mt-5 rounded-lg">
+          Sign In
+        </button>
+
+        <p class="text-[#98989d] mt-5 text-center">
+          Don't have an account?
+          <span class="text-[#5e66f1]">Sign up</span>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
