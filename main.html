@@ -28,7 +28,56 @@
           <i class="fa-solid fa-gear text-white text-xl"></i>
         </div>
       </div>
-      <div class="chats-section w-100 h-screen bg-[#303032]"></div>
+      <div class="chats-section w-120 h-screen bg-[#303032] p-6 px-4">
+        <div class="section-title mb-3 flex justify-between items-center">
+          <h1 class="text-white font-bold text-2xl">Chats</h1>
+          <div class="new-chat flex items-center cursor-pointer">
+            <i class="fa-regular fa-square-plus text-white text-2xl"></i>
+          </div>
+        </div>
+
+        <div
+          class="section-search bg-[#49494c] flex items-center gap-2 rounded-lg px-2"
+        >
+          <i class="fa-solid fa-magnifying-glass text-white"></i>
+          <input
+            class="p-2 w-full placeholder:text-white outline-none text-white"
+            type="text"
+            placeholder="Search"
+          />
+        </div>
+
+        <div class="section-chat-empty text-center mt-10 hidden">
+          <i class="fa-solid fa-comments text-white text-5xl"></i>
+          <h1 class="text-white">There are no chats here</h1>
+          <p class="text-gray-400">Try adding people to chat with</p>
+        </div>
+
+        <div class="section-all-chats mt-6">
+          <div
+            class="friend flex items-center gap-4 hover:bg-[#49494c] px-2 rounded-lg cursor-pointer"
+          >
+            <div class="profile-pic w-[50px] h-[50px] flex-shrink-0">
+              <img
+                class="w-full h-full rounded-full object-cover"
+                src="466338243_4235983946724585_908158861520541347_n.jpg"
+                alt="profile-pic"
+              />
+            </div>
+            <div
+              class="info w-full flex justify-between items-center py-2 border-b-1 border-[#49494c]"
+            >
+              <div class="name-and-message">
+                <h1 class="text-white">Friend Name</h1>
+                <p class="text-gray-400">Latest Message Sent</p>
+              </div>
+              <div class="message-date">
+                <h1 class="text-white">11:31</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="messages-section"></div>
     </div>
   </body>
