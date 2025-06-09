@@ -26,6 +26,9 @@
           type="text"
           placeholder="Enter your email"
         />
+        <p class="email-sign-in-error text-red-400 hidden">
+          Invalid Email Address
+        </p>
         <label for="pass" class="my-3">Password</label>
         <input
           id="pass"
@@ -33,19 +36,25 @@
           type="password"
           placeholder="Enter your password"
         />
+        <p class="pass-sign-in-error text-red-400 hidden">Invalid Password</p>
 
-        <a
-          href="main.html"
-          class="sign-in text-center bg-[#6366f1] hover:bg-[#5856eb] p-3 mt-5 rounded-lg font-bold cursor-pointer transition-all duration-300"
+        <button
+          class="sign-in text-center bg-[#6366f1] hover:bg-[#5856eb] p-3 my-5 rounded-lg font-bold cursor-pointer transition-all duration-300"
         >
           Sign In
-        </a>
+        </button>
 
-        <p class="text-[#98989d] mt-5 text-center">
+        <p class="sign-in-validation text-center text-red-400 mb-3 hidden">
+          Logged In Successfully
+        </p>
+
+        <p class="text-[#98989d] text-center">
           Don't have an account?
-          <a href="sign up.html" class="text-[#5e66f1]">Sign up</a>
+          <a href="signUp.html" class="text-[#5e66f1]">Sign up</a>
         </p>
       </div>
     </div>
+    <script type="module" src="functions.js"></script>
+    <script type="module" src="login.js"></script>
   </body>
 </html>
