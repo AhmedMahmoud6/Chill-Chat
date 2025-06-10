@@ -1,4 +1,5 @@
 export function tempChat(userImg, username, messagesSection) {
+  messagesSection.innerHTML = "";
   let tempChatHTML = `
               <div
             class="opened-chat h-full min-w-120 flex flex-col max-[875px]:min-w-0 flex-1 max-[875px]:flex-0"
@@ -35,13 +36,14 @@ export function tempChat(userImg, username, messagesSection) {
               <div class="send-message w-full h-8/12">
                 <input
                   type="text"
-                  class="p-2 px-4 w-full placeholder:text-gray-300 outline-none text-white bg-[#65656a] w-full h-full rounded-lg"
+                  class="send-message-input p-2 px-4 w-full placeholder:text-gray-300 outline-none text-white bg-[#65656a] w-full h-full rounded-lg"
                   placeholder="Type a message"
                 />
               </div>
-              <div class="send-voice-message">
-                <i class="fa-solid fa-microphone text-white text-xl"></i>
+              <div class="send-voice-message max-w-[20px] text-center">
+                <i class="fa-solid fa-microphone text-white text-xl w-[20px]"></i>
               </div>
+              <div class="send-current-message hidden"><i class="fa-solid fa-paper-plane text-white text-xl"></i></div>
             </div>
           </div>
     `;

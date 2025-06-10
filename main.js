@@ -60,8 +60,10 @@ observeAuthState(async (user) => {
 // open search users
 newChat.addEventListener("click", async () => {
   newChatContainer.classList.remove("hidden");
-  newChatSearch.focus();
+  newChatSearch.disabled = true;
   allUsers = await getAllUserNames();
+  if (allUsers) newChatSearch.disabled = false;
+  newChatSearch.focus();
 });
 
 // search users
@@ -108,6 +110,25 @@ document.addEventListener("click", (e) => {
     filteredUsers.forEach((user) => {
       if (user.name === selectedUserId) {
         tempChat(user.profilePic, user.name, messagesSection);
+        let sendVoiceMessage = document.querySelector(".send-voice-message");
+        let sendCurrentMessage = document.querySelector(
+          ".send-current-message"
+        );
+
+        if (document.querySelector(".send-message-input")) {
+          console.log("yes");
+          document
+            .querySelector(".send-message-input")
+            .addEventListener("input", (e) => {
+              if (e.target.value === "") {
+                sendVoiceMessage.classList.remove("hidden");
+                sendCurrentMessage.classList.add("hidden");
+              } else {
+                sendVoiceMessage.classList.add("hidden");
+                sendCurrentMessage.classList.remove("hidden");
+              }
+            });
+        }
         return;
       }
     });
