@@ -1,7 +1,7 @@
-export function tempChat(userImg, username) {
+export function tempChat(userImg, username, messagesSection) {
   let tempChatHTML = `
               <div
-            class="opened-chat h-full min-w-120 flex flex-col max-[875px]:min-w-0 flex-1 max-[875px]:flex-0 hidden"
+            class="opened-chat h-full min-w-120 flex flex-col max-[875px]:min-w-0 flex-1 max-[875px]:flex-0"
           >
             <div
               class="contact-info relative bg-[#49494c] w-full h-16 flex justify-between items-center px-8"
@@ -19,6 +19,10 @@ export function tempChat(userImg, username) {
               <div class="contact-more cursor-pointer p-2">
                 <i class="fa-solid fa-ellipsis-vertical text-white text-xl"></i>
               </div>
+            </div>
+
+            <div class="chat flex-1 p-8 relative overflow-y-auto">
+            <div class="chat-start-point w-full"></div>
             </div>
 
 
@@ -41,4 +45,5 @@ export function tempChat(userImg, username) {
             </div>
           </div>
     `;
+  messagesSection.insertAdjacentHTML("beforeend", tempChatHTML);
 }

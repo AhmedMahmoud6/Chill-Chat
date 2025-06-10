@@ -7,7 +7,20 @@ import {
 } from "./firebase-auth.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
+import { realChat } from "./components/realChat.js";
+import { tempChat } from "./components/tempChat.js";
+import {
+  yourMessageContainer,
+  firstYourMessage,
+  continuousYourMessage,
+} from "./components/yourMessage.js";
+import {
+  friendMessageContainer,
+  firstFriendMessage,
+  continuousFriendMessage,
+} from "./components/friendMessage.js";
 
+let messagesSection = document.querySelector(".messages-section");
 let chatSectionEmpty = document.querySelector(".section-chat-empty");
 let allChatSection = document.querySelector(".section-all-chats");
 let newChat = document.querySelector(".new-chat");
@@ -19,6 +32,7 @@ let noUsersFound = document.querySelector(".no-users");
 
 let userAuth = auth;
 let allUsers;
+let filteredUsers;
 
 // check if there's a talkedWith user
 observeAuthState(async (user) => {
@@ -55,7 +69,7 @@ newChatSearch.addEventListener("input", async () => {
   noUsersFound.classList.add("hidden");
   if (newChatSearch.value !== "") {
     foundedUsersDiv.innerHTML = "";
-    let filteredUsers = allUsers
+    filteredUsers = allUsers
       .filter(
         (username) =>
           username.name?.toLowerCase().startsWith(newChatSearch.value) &&
@@ -91,7 +105,11 @@ document.addEventListener("click", (e) => {
     let selectedUserId = e.target.closest(".user").dataset.userid;
     newChatContainer.classList.add("hidden");
 
-    if (openedChat) openedChat.classList.remove("hidden");
-    console.log(selectedUserId);
+    filteredUsers.forEach((user) => {
+      if (user.name === selectedUserId) {
+        tempChat(user.profilePic, user.name, messagesSection);
+        return;
+      }
+    });
   }
 });
