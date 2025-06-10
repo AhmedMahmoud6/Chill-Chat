@@ -119,6 +119,7 @@ document.addEventListener("click", (e) => {
 
         if (sendMessageInput) {
           sendMessageInput.addEventListener("input", (e) => {
+            // update the send icon and voice icon
             if (e.target.value === "") {
               sendVoiceMessage.classList.remove("hidden");
               sendCurrentMessageIcon.classList.add("hidden");
@@ -128,11 +129,14 @@ document.addEventListener("click", (e) => {
             }
           });
 
+          // send message by pressing enter
           sendMessageInput.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
               console.log("submitting Message");
             }
           });
+
+          // send message by clicking the send icon
           sendCurrentMessageIcon.addEventListener("click", () => {
             console.log("submitting Message");
           });
