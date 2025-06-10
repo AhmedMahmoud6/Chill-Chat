@@ -10,6 +10,7 @@ import {
   signUpWithEmail,
   getFriendlyErrorMessage,
   observeAuthState,
+  setDocument,
 } from "./firebase-auth.js";
 
 let fullName = document.querySelector(".full-name");
@@ -49,6 +50,14 @@ signUpButton.addEventListener("click", async () => {
       signUpPassed.textContent = "Access Granted Successfully.";
       signUpPassed.classList.remove("hidden");
       signUpPassed.classList.add("text-green-400");
+
+      // creating users details in firebase
+      await setDocument("users", email.value, {
+        name: fullName.value,
+        email: email.value,
+        profilePic:
+          "https://i.pinimg.com/736x/e6/e4/df/e6e4df26ba752161b9fc6a17321fa286.jpg",
+      });
 
       observeAuthState((user) => {
         if (user)

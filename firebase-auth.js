@@ -125,6 +125,12 @@ export function observeAuthState(callback) {
   });
 }
 
+export async function subcollectionExists(colName, docId, subColName) {
+  const subColRef = collection(db, colName, docId, subColName);
+  const snapshot = await getDocs(subColRef);
+  return !snapshot.empty;
+}
+
 export function getFriendlyErrorMessage(error) {
   if (!error) return "Something went wrong. Please try again.";
 
