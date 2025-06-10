@@ -11,6 +11,8 @@ import {
   getFriendlyErrorMessage,
   observeAuthState,
   setDocument,
+  updateProfile,
+  auth,
 } from "./firebase-auth.js";
 
 let fullName = document.querySelector(".full-name");
@@ -52,11 +54,15 @@ signUpButton.addEventListener("click", async () => {
       signUpPassed.classList.add("text-green-400");
 
       // creating users details in firebase
-      await setDocument("users", email.value, {
+      await setDocument("users", fullName.value.toLowerCase(), {
         name: fullName.value,
         email: email.value,
         profilePic:
           "https://i.pinimg.com/736x/e6/e4/df/e6e4df26ba752161b9fc6a17321fa286.jpg",
+      });
+
+      await updateProfile(auth.currentUser, {
+        displayName: fullName.value,
       });
 
       observeAuthState((user) => {

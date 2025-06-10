@@ -664,6 +664,32 @@
         </div>
       </div>
     </div>
+
+    <div
+      class="new-chat-container absolute w-screen h-screen top-0 bg-black/50 flex justify-center items-center hidden"
+    >
+      <div class="new-chat-card w-130 bg-[#2f2f30] p-8 rounded-lg">
+        <div class="topside">
+          <h1 class="text-white text-xl font-bold mb-4">Search Users</h1>
+          <input
+            type="text"
+            class="new-chat-search bg-[#5d5d59] w-full p-2 rounded-lg outline-none placeholder:text-gray-300 text-white"
+            placeholder="Enter user name"
+          />
+        </div>
+
+        <div class="bottomside mt-14">
+          <div class="no-users flex flex-col items-center gap-2 hidden">
+            <i class="fa-solid fa-users-slash text-white text-4xl"></i>
+            <h1 class="text-white font-bold">No users found</h1>
+            <p class="text-gray-300">Check if there's a misspells</p>
+          </div>
+          <div class="founded-users"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="components/newChat.js"></script>
     <script type="module" src="functions.js"></script>
     <script type="module" src="firebase-auth.js"></script>
     <script type="module" src="main.js"></script>

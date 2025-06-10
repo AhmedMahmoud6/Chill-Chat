@@ -23,6 +23,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  updateProfile,
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
 
@@ -42,7 +43,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // EXPORTS
-export { auth };
+export { auth, updateProfile };
 
 // Collection and Document references
 export const getCollectionRef = (colName) => collection(db, colName);
@@ -129,6 +130,15 @@ export async function subcollectionExists(colName, docId, subColName) {
   const subColRef = collection(db, colName, docId, subColName);
   const snapshot = await getDocs(subColRef);
   return !snapshot.empty;
+}
+
+export async function getAllUserNames() {
+  const usersRef = collection(db, "users");
+  const snapshot = await getDocs(usersRef);
+  const names = snapshot.docs.map((doc) => {
+    return { name: doc.data().name, profilePic: doc.data().profilePic };
+  });
+  return names;
 }
 
 export function getFriendlyErrorMessage(error) {

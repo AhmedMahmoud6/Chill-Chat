@@ -3,21 +3,31 @@ import {
   subcollectionExists,
   auth,
   observeAuthState,
+  getAllUserNames,
 } from "./firebase-auth.js";
+
+import { displayFoundedUsers } from "./components/newChat.js";
 
 let chatSectionEmpty = document.querySelector(".section-chat-empty");
 let allChatSection = document.querySelector(".section-all-chats");
+let newChat = document.querySelector(".new-chat");
+let newChatContainer = document.querySelector(".new-chat-container");
+let newChatSearch = document.querySelector(".new-chat-search");
 let openedChat = document.querySelector(".opened-chat");
+let foundedUsersDiv = document.querySelector(".founded-users");
+let noUsersFound = document.querySelector(".no-users");
+
+let userAuth = auth;
+let allUsers;
 
 observeAuthState(async (user) => {
   if (!user) return;
 
-  const userEmail = user.email;
-  console.log(userEmail);
+  const userDisplayName = user.displayName;
 
   const talkedWithUsers = await subcollectionExists(
     "users",
-    userEmail,
+    userDisplayName,
     "talkedWith"
   );
 
@@ -28,5 +38,41 @@ observeAuthState(async (user) => {
   } else {
     chatSectionEmpty.classList.add("hidden");
     allChatSection.classList.remove("hidden");
+  }
+});
+
+newChat.addEventListener("click", async () => {
+  newChatContainer.classList.remove("hidden");
+  allUsers = await getAllUserNames();
+});
+
+newChatSearch.addEventListener("input", async () => {
+  noUsersFound.classList.add("hidden");
+  if (newChatSearch.value !== "") {
+    foundedUsersDiv.innerHTML = "";
+    let filteredUsers = allUsers
+      .filter((username) =>
+        username.name?.toLowerCase().startsWith(newChatSearch.value)
+      )
+      .map((username) => {
+        return {
+          name: username.name,
+          profilePic: username.profilePic,
+        };
+      });
+
+    if (filteredUsers.length === 0) {
+      noUsersFound.classList.remove("hidden");
+    } else
+      filteredUsers.forEach((user) => {
+        displayFoundedUsers(
+          user.name,
+          user.profilePic,
+          user.name,
+          foundedUsersDiv
+        );
+      });
+  } else {
+    foundedUsersDiv.innerHTML = "";
   }
 });
