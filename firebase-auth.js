@@ -18,6 +18,14 @@ import {
   limit,
 } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
 
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCt1vcjo9Eu_MxnZjh-0DvlyYeitWR4quQ",
   authDomain: "chill-chat-46b6a.firebaseapp.com",
@@ -30,9 +38,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
 // EXPORTS
+export { auth };
 
 // Collection and Document references
 export const getCollectionRef = (colName) => collection(db, colName);
@@ -67,3 +77,56 @@ export const runQuery = async (colName, conditions = []) => {
 
 // Helpers to build query filters
 export { where, orderBy, limit };
+
+export async function signUpWithEmail(email, password) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    console.log("User signed up:", userCredential.user);
+    return { success: true, message: "Sign-up successful!" };
+  } catch (error) {
+    console.error("Sign-up error:", error.message);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function signInWithEmail(email, password) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    console.log("User signed in:", userCredential.user);
+    return { success: true, message: "Sign-in successful!" };
+  } catch (error) {
+    console.error("Sign-in error:", error.message);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function logoutUser() {
+  try {
+    await signOut(auth);
+    console.log("User signed out");
+    return { success: true, message: "Logout Successful" };
+  } catch (error) {
+    console.error("Logout Error: ", error.message);
+    return { success: false, message: error.message };
+  }
+}
+
+export function observeAuthState(callback) {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User is signed in:", user.email);
+      callback(user); // You can update UI or state here
+    } else {
+      console.log("User is signed out");
+      callback(null);
+    }
+  });
+}
