@@ -111,23 +111,31 @@ document.addEventListener("click", (e) => {
       if (user.name === selectedUserId) {
         tempChat(user.profilePic, user.name, messagesSection);
         let sendVoiceMessage = document.querySelector(".send-voice-message");
-        let sendCurrentMessage = document.querySelector(
+        let sendCurrentMessageIcon = document.querySelector(
           ".send-current-message"
         );
 
-        if (document.querySelector(".send-message-input")) {
-          console.log("yes");
-          document
-            .querySelector(".send-message-input")
-            .addEventListener("input", (e) => {
-              if (e.target.value === "") {
-                sendVoiceMessage.classList.remove("hidden");
-                sendCurrentMessage.classList.add("hidden");
-              } else {
-                sendVoiceMessage.classList.add("hidden");
-                sendCurrentMessage.classList.remove("hidden");
-              }
-            });
+        let sendMessageInput = document.querySelector(".send-message-input");
+
+        if (sendMessageInput) {
+          sendMessageInput.addEventListener("input", (e) => {
+            if (e.target.value === "") {
+              sendVoiceMessage.classList.remove("hidden");
+              sendCurrentMessageIcon.classList.add("hidden");
+            } else {
+              sendVoiceMessage.classList.add("hidden");
+              sendCurrentMessageIcon.classList.remove("hidden");
+            }
+          });
+
+          sendMessageInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              console.log("submitting Message");
+            }
+          });
+          sendCurrentMessageIcon.addEventListener("click", () => {
+            console.log("submitting Message");
+          });
         }
         return;
       }

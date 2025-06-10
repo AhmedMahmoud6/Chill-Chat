@@ -41,10 +41,10 @@ export function realChat(userImg, username, chatId, messagesSection) {
                   placeholder="Type a message"
                 />
               </div>
-              <div class="send-voice-message max-w-[20px] text-center">
+              <div class="send-voice-message max-w-[20px] text-center cursor-pointer">
                 <i class="fa-solid fa-microphone text-white text-xl w-[20px]"></i>
               </div>
-              <div class="send-current-message hidden"><i class="fa-solid fa-paper-plane text-white text-xl"></i></div>
+              <div class="send-current-message cursor-pointer hidden"><i class="fa-solid fa-paper-plane text-white text-xl"></i></div>
             </div>
           </div>
     `;
