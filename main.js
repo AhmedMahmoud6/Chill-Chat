@@ -20,6 +20,7 @@ let noUsersFound = document.querySelector(".no-users");
 let userAuth = auth;
 let allUsers;
 
+// check if there's a talkedWith user
 observeAuthState(async (user) => {
   if (!user) return;
 
@@ -39,14 +40,17 @@ observeAuthState(async (user) => {
     chatSectionEmpty.classList.add("hidden");
     allChatSection.classList.remove("hidden");
   }
+  newChat.classList.remove("hidden");
 });
 
+// open search users
 newChat.addEventListener("click", async () => {
   newChatContainer.classList.remove("hidden");
   newChatSearch.focus();
   allUsers = await getAllUserNames();
 });
 
+// search users
 newChatSearch.addEventListener("input", async () => {
   noUsersFound.classList.add("hidden");
   if (newChatSearch.value !== "") {
@@ -75,7 +79,19 @@ newChatSearch.addEventListener("input", async () => {
   }
 });
 
+// close search users container
 newChatContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("new-chat-container"))
     newChatContainer.classList.add("hidden");
+});
+
+document.addEventListener("click", (e) => {
+  // selected a user to chat with
+  if (e.target.closest(".user")) {
+    let selectedUserId = e.target.closest(".user").dataset.userid;
+    newChatContainer.classList.add("hidden");
+
+    if (openedChat) openedChat.classList.remove("hidden");
+    console.log(selectedUserId);
+  }
 });

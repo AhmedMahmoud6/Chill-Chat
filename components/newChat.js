@@ -1,7 +1,7 @@
 export function displayFoundedUsers(userId, imageLink, container) {
   let foundedHTML = `
-    <div class="flex items-center gap-4 hover:bg-[#49494c] p-2 rounded-lg cursor-pointer"
-    id=${userId}
+    <div class="user flex items-center gap-4 hover:bg-[#49494c] p-2 rounded-lg cursor-pointer"
+    data-userid="${userId}"
     >
         <div class="user-profile-pic w-[50px] h-[50px] flex-shrink-0">
         <img
@@ -19,6 +19,5 @@ export function displayFoundedUsers(userId, imageLink, container) {
         </div>
     </div>
     `;
-
   container.insertAdjacentHTML("beforeend", foundedHTML);
 }

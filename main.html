@@ -33,7 +33,7 @@
       >
         <div class="section-title mb-3 flex justify-between items-center">
           <h1 class="text-white font-bold text-2xl">Chats</h1>
-          <div class="new-chat flex items-center cursor-pointer">
+          <div class="new-chat flex items-center cursor-pointer hidden">
             <i class="fa-regular fa-square-plus text-white text-2xl"></i>
           </div>
         </div>
@@ -104,7 +104,7 @@
             </div>
 
             <div class="chat flex-1 p-8 relative overflow-y-auto">
-              <div class="w-full">
+              <div class="chat-start-point w-full">
                 <div class="grid pb-4">
                   <div class="flex gap-2.5 mb-4">
                     <div class="sender-photo w-11 h-11">
@@ -114,13 +114,15 @@
                         class="w-full h-full rounded-full"
                       />
                     </div>
-                    <div class="grid">
+                    <div class="friend-message-section grid">
                       <h5
                         class="text-white text-sm font-semibold leading-snug pb-1"
                       >
                         Friend Name
                       </h5>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
+                      <div
+                        class="first-msg w-max max-w-xs lg:max-w-sm xl:max-w-md grid"
+                      >
                         <div
                           class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
                         >
@@ -140,7 +142,10 @@
                           </h6>
                         </div>
                       </div>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
+
+                      <div
+                        class="continuous-msg w-max max-w-xs lg:max-w-sm xl:max-w-md grid"
+                      >
                         <div
                           class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
                         >
@@ -165,7 +170,7 @@
                 </div>
 
                 <div class="flex gap-2.5 justify-end pb-4">
-                  <div class="">
+                  <div class="your-msg-container">
                     <div class="w-max max-w-xs xl:max-w-md grid mb-2">
                       <h5
                         class="text-right text-white text-sm font-semibold leading-snug pb-1"
@@ -188,434 +193,6 @@
                     <div class="justify-center">
                       <div class="w-max max-w-xs xl:max-w-md grid ml-auto">
                         <div class="px-3 py-2 bg-[#6366f1] relative rounded">
-                          <h2
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Anyone on for lunch today
-                          </h2>
-                        </div>
-                        <div class="justify-start items-center inline-flex">
-                          <h3
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h3>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="your-photo w-11 h-11">
-                    <img
-                      src="466338243_4235983946724585_908158861520541347_n.jpg"
-                      alt="Shanay image"
-                      class="w-full h-full rounded-full"
-                    />
-                  </div>
-                </div>
-                <div class="grid pb-4">
-                  <div class="flex gap-2.5 mb-4">
-                    <div class="sender-photo w-11 h-11">
-                      <img
-                        src="466338243_4235983946724585_908158861520541347_n.jpg"
-                        alt="Shanay image"
-                        class="w-full h-full rounded-full"
-                      />
-                    </div>
-                    <div class="grid">
-                      <h5
-                        class="text-white text-sm font-semibold leading-snug pb-1"
-                      >
-                        Friend Name
-                      </h5>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
-                        <div
-                          class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
-                        >
-                          <h5
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Guts, I need a review of work. Are you ready?
-                          </h5>
-                        </div>
-                        <div
-                          class="justify-end items-center inline-flex mb-2.5"
-                        >
-                          <h6
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h6>
-                        </div>
-                      </div>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
-                        <div
-                          class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
-                        >
-                          <h5
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Let me know
-                          </h5>
-                        </div>
-                        <div
-                          class="justify-end items-center inline-flex mb-2.5"
-                        >
-                          <h6
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex gap-2.5 justify-end pb-4">
-                  <div class="">
-                    <div class="w-max max-w-xs xl:max-w-md grid mb-2">
-                      <h5
-                        class="text-right text-white text-sm font-semibold leading-snug pb-1"
-                      >
-                        You
-                      </h5>
-                      <div class="px-3 py-2 bg-[#202020] relative rounded">
-                        <h2 class="text-white text-sm font-normal leading-snug">
-                          Yes, let’s see, send your work here
-                        </h2>
-                      </div>
-                      <div class="justify-start items-center inline-flex">
-                        <h3
-                          class="text-gray-400 text-xs font-normal leading-4 py-1"
-                        >
-                          05:14 PM
-                        </h3>
-                      </div>
-                    </div>
-                    <div class="justify-center">
-                      <div class="w-max max-w-xs xl:max-w-md grid ml-auto">
-                        <div class="px-3 py-2 bg-[#202020] relative rounded">
-                          <h2
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Anyone on for lunch today
-                          </h2>
-                        </div>
-                        <div class="justify-start items-center inline-flex">
-                          <h3
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h3>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="your-photo w-11 h-11">
-                    <img
-                      src="466338243_4235983946724585_908158861520541347_n.jpg"
-                      alt="Shanay image"
-                      class="w-full h-full rounded-full"
-                    />
-                  </div>
-                </div>
-                <div class="grid pb-4">
-                  <div class="flex gap-2.5 mb-4">
-                    <div class="sender-photo w-11 h-11">
-                      <img
-                        src="466338243_4235983946724585_908158861520541347_n.jpg"
-                        alt="Shanay image"
-                        class="w-full h-full rounded-full"
-                      />
-                    </div>
-                    <div class="grid">
-                      <h5
-                        class="text-white text-sm font-semibold leading-snug pb-1"
-                      >
-                        Friend Name
-                      </h5>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
-                        <div
-                          class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
-                        >
-                          <h5
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Guts, I need a review of work. Are you ready?
-                          </h5>
-                        </div>
-                        <div
-                          class="justify-end items-center inline-flex mb-2.5"
-                        >
-                          <h6
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h6>
-                        </div>
-                      </div>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
-                        <div
-                          class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
-                        >
-                          <h5
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Let me know
-                          </h5>
-                        </div>
-                        <div
-                          class="justify-end items-center inline-flex mb-2.5"
-                        >
-                          <h6
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex gap-2.5 justify-end pb-4">
-                  <div class="">
-                    <div class="w-max max-w-xs xl:max-w-md grid mb-2">
-                      <h5
-                        class="text-right text-white text-sm font-semibold leading-snug pb-1"
-                      >
-                        You
-                      </h5>
-                      <div class="px-3 py-2 bg-[#202020] relative rounded">
-                        <h2 class="text-white text-sm font-normal leading-snug">
-                          Yes, let’s see, send your work here
-                        </h2>
-                      </div>
-                      <div class="justify-start items-center inline-flex">
-                        <h3
-                          class="text-gray-400 text-xs font-normal leading-4 py-1"
-                        >
-                          05:14 PM
-                        </h3>
-                      </div>
-                    </div>
-                    <div class="justify-center">
-                      <div class="w-max max-w-xs xl:max-w-md grid ml-auto">
-                        <div class="px-3 py-2 bg-[#202020] relative rounded">
-                          <h2
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Anyone on for lunch today
-                          </h2>
-                        </div>
-                        <div class="justify-start items-center inline-flex">
-                          <h3
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h3>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="your-photo w-11 h-11">
-                    <img
-                      src="466338243_4235983946724585_908158861520541347_n.jpg"
-                      alt="Shanay image"
-                      class="w-full h-full rounded-full"
-                    />
-                  </div>
-                </div>
-                <div class="grid pb-4">
-                  <div class="flex gap-2.5 mb-4">
-                    <div class="sender-photo w-11 h-11">
-                      <img
-                        src="466338243_4235983946724585_908158861520541347_n.jpg"
-                        alt="Shanay image"
-                        class="w-full h-full rounded-full"
-                      />
-                    </div>
-                    <div class="grid">
-                      <h5
-                        class="text-white text-sm font-semibold leading-snug pb-1"
-                      >
-                        Friend Name
-                      </h5>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
-                        <div
-                          class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
-                        >
-                          <h5
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Guts, I need a review of work. Are you ready?
-                          </h5>
-                        </div>
-                        <div
-                          class="justify-end items-center inline-flex mb-2.5"
-                        >
-                          <h6
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h6>
-                        </div>
-                      </div>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
-                        <div
-                          class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
-                        >
-                          <h5
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Let me know
-                          </h5>
-                        </div>
-                        <div
-                          class="justify-end items-center inline-flex mb-2.5"
-                        >
-                          <h6
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex gap-2.5 justify-end pb-4">
-                  <div class="">
-                    <div class="w-max max-w-xs xl:max-w-md grid mb-2">
-                      <h5
-                        class="text-right text-white text-sm font-semibold leading-snug pb-1"
-                      >
-                        You
-                      </h5>
-                      <div class="px-3 py-2 bg-[#202020] relative rounded">
-                        <h2 class="text-white text-sm font-normal leading-snug">
-                          Yes, let’s see, send your work here
-                        </h2>
-                      </div>
-                      <div class="justify-start items-center inline-flex">
-                        <h3
-                          class="text-gray-400 text-xs font-normal leading-4 py-1"
-                        >
-                          05:14 PM
-                        </h3>
-                      </div>
-                    </div>
-                    <div class="justify-center">
-                      <div class="w-max max-w-xs xl:max-w-md grid ml-auto">
-                        <div class="px-3 py-2 bg-[#202020] relative rounded">
-                          <h2
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Anyone on for lunch today
-                          </h2>
-                        </div>
-                        <div class="justify-start items-center inline-flex">
-                          <h3
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h3>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="your-photo w-11 h-11">
-                    <img
-                      src="466338243_4235983946724585_908158861520541347_n.jpg"
-                      alt="Shanay image"
-                      class="w-full h-full rounded-full"
-                    />
-                  </div>
-                </div>
-                <div class="grid pb-4">
-                  <div class="flex gap-2.5 mb-4">
-                    <div class="sender-photo w-11 h-11">
-                      <img
-                        src="466338243_4235983946724585_908158861520541347_n.jpg"
-                        alt="Shanay image"
-                        class="w-full h-full rounded-full"
-                      />
-                    </div>
-                    <div class="grid">
-                      <h5
-                        class="text-white text-sm font-semibold leading-snug pb-1"
-                      >
-                        Friend Name
-                      </h5>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
-                        <div
-                          class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
-                        >
-                          <h5
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Guts, I need a review of work. Are you ready?
-                          </h5>
-                        </div>
-                        <div
-                          class="justify-end items-center inline-flex mb-2.5"
-                        >
-                          <h6
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h6>
-                        </div>
-                      </div>
-                      <div class="w-max max-w-xs lg:max-w-sm xl:max-w-md grid">
-                        <div
-                          class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
-                        >
-                          <h5
-                            class="text-white text-sm font-normal leading-snug"
-                          >
-                            Let me know
-                          </h5>
-                        </div>
-                        <div
-                          class="justify-end items-center inline-flex mb-2.5"
-                        >
-                          <h6
-                            class="text-gray-400 text-xs font-normal leading-4 py-1"
-                          >
-                            05:14 PM
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex gap-2.5 justify-end pb-4">
-                  <div class="">
-                    <div class="w-max max-w-xs xl:max-w-md grid mb-2">
-                      <h5
-                        class="text-right text-white text-sm font-semibold leading-snug pb-1"
-                      >
-                        You
-                      </h5>
-                      <div class="px-3 py-2 bg-[#202020] relative rounded">
-                        <h2 class="text-white text-sm font-normal leading-snug">
-                          Yes, let’s see, send your work here
-                        </h2>
-                      </div>
-                      <div class="justify-start items-center inline-flex">
-                        <h3
-                          class="text-gray-400 text-xs font-normal leading-4 py-1"
-                        >
-                          05:14 PM
-                        </h3>
-                      </div>
-                    </div>
-                    <div class="justify-center">
-                      <div class="w-max max-w-xs xl:max-w-md grid ml-auto">
-                        <div class="px-3 py-2 bg-[#202020] relative rounded">
                           <h2
                             class="text-white text-sm font-normal leading-snug"
                           >
