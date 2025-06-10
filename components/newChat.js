@@ -1,4 +1,4 @@
-export function displayFoundedUsers(userId, imageLink, userName, container) {
+export function displayFoundedUsers(userId, imageLink, container) {
   let foundedHTML = `
     <div class="flex items-center gap-4 hover:bg-[#49494c] p-2 rounded-lg cursor-pointer"
     id=${userId}
@@ -14,7 +14,7 @@ export function displayFoundedUsers(userId, imageLink, userName, container) {
         class="user-info w-full flex justify-between items-center py-2"
         >
         <div class="user-name">
-            <h1 class="text-white">${userName}</h1>
+            <h1 class="text-white">${userId}</h1>
         </div>
         </div>
     </div>

@@ -65,12 +65,7 @@ newChatSearch.addEventListener("input", async () => {
       noUsersFound.classList.remove("hidden");
     } else
       filteredUsers.forEach((user) => {
-        displayFoundedUsers(
-          user.name,
-          user.profilePic,
-          user.name,
-          foundedUsersDiv
-        );
+        displayFoundedUsers(user.name, user.profilePic, foundedUsersDiv);
       });
   } else {
     foundedUsersDiv.innerHTML = "";
