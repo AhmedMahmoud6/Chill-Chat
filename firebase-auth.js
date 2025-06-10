@@ -85,11 +85,10 @@ export async function signUpWithEmail(email, password) {
       email,
       password
     );
-    console.log("User signed up:", userCredential.user);
+
     return { success: true, message: "Sign-up successful!" };
   } catch (error) {
-    console.error("Sign-up error:", error.message);
-    return { success: false, message: error.message };
+    return { success: false, message: error.code };
   }
 }
 
@@ -100,33 +99,45 @@ export async function signInWithEmail(email, password) {
       email,
       password
     );
-    console.log("User signed in:", userCredential.user);
+
     return { success: true, message: "Sign-in successful!" };
   } catch (error) {
-    console.error("Sign-in error:", error.message);
-    return { success: false, message: error.message };
+    return { success: false, message: error.code };
   }
 }
 
 export async function logoutUser() {
   try {
     await signOut(auth);
-    console.log("User signed out");
     return { success: true, message: "Logout Successful" };
   } catch (error) {
-    console.error("Logout Error: ", error.message);
-    return { success: false, message: error.message };
+    return { success: false, message: error.code };
   }
 }
 
 export function observeAuthState(callback) {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log("User is signed in:", user.email);
       callback(user); // You can update UI or state here
     } else {
-      console.log("User is signed out");
       callback(null);
     }
   });
+}
+
+export function getFriendlyErrorMessage(error) {
+  if (!error) return "Something went wrong. Please try again.";
+
+  const map = {
+    "auth/email-already-in-use": "This email is already in use.",
+    "auth/invalid-email": "Please enter a valid email address.",
+    "auth/weak-password": "Password should be at least 6 characters.",
+    "auth/missing-password": "Please enter a password.",
+    "auth/user-not-found": "No account found with this email.",
+    "auth/invalid-credential": "Incorrect Email or password. Please try again.",
+    "auth/too-many-requests":
+      "Too many attempts. Please wait a moment and try again.",
+  };
+
+  return map[error] || "An unknown error occurred.";
 }
