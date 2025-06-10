@@ -13,6 +13,7 @@ import {
   setDocument,
   updateProfile,
   auth,
+  getAllUserNames,
 } from "./firebase-auth.js";
 
 let fullName = document.querySelector(".full-name");
@@ -45,13 +46,25 @@ signUpButton.addEventListener("click", async () => {
   ) {
     signUpPassed.textContent = "Creating your account.";
     signUpPassed.classList.remove("hidden");
+
+    let users = await getAllUserNames();
+    let usersNamesLowerCase = users.filter(
+      (username) => username.name.toLowerCase() === fullName.value.toLowerCase()
+    );
+
+    if (usersNamesLowerCase.length > 0) {
+      signUpPassed.classList.replace("text-green-400", "text-red-400");
+      signUpPassed.textContent = "This username is already in use.";
+      return;
+    }
+
     let result = await signUpWithEmail(email.value, password.value);
 
     // account created
     if (result.success) {
       signUpPassed.textContent = "Access Granted Successfully.";
       signUpPassed.classList.remove("hidden");
-      signUpPassed.classList.add("text-green-400");
+      signUpPassed.classList.replace("text-red-400", "text-green-400");
 
       // creating users details in firebase
       await setDocument("users", fullName.value.toLowerCase(), {
@@ -73,7 +86,7 @@ signUpButton.addEventListener("click", async () => {
       });
     } else {
       signUpPassed.textContent = getFriendlyErrorMessage(result.message);
-      signUpPassed.classList.add("text-red-400");
+      signUpPassed.classList.replace("text-green-400", "text-red-400");
       signUpPassed.classList.remove("hidden");
     }
   }

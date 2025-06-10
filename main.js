@@ -43,6 +43,7 @@ observeAuthState(async (user) => {
 
 newChat.addEventListener("click", async () => {
   newChatContainer.classList.remove("hidden");
+  newChatSearch.focus();
   allUsers = await getAllUserNames();
 });
 
@@ -51,8 +52,10 @@ newChatSearch.addEventListener("input", async () => {
   if (newChatSearch.value !== "") {
     foundedUsersDiv.innerHTML = "";
     let filteredUsers = allUsers
-      .filter((username) =>
-        username.name?.toLowerCase().startsWith(newChatSearch.value)
+      .filter(
+        (username) =>
+          username.name?.toLowerCase().startsWith(newChatSearch.value) &&
+          username.name !== userAuth.currentUser.displayName
       )
       .map((username) => {
         return {
@@ -70,4 +73,9 @@ newChatSearch.addEventListener("input", async () => {
   } else {
     foundedUsersDiv.innerHTML = "";
   }
+});
+
+newChatContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("new-chat-container"))
+    newChatContainer.classList.add("hidden");
 });

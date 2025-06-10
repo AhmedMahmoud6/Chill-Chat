@@ -1,5 +1,5 @@
 export function isValidFullName(name) {
-  const regex = /^[A-Za-z][A-Za-z\s'-]{1,}$/;
+  const regex = /^[A-Za-z][A-Za-z0-9\s'-@_.!$%*#&()]*$/;
   return regex.test(name.trim());
 }
 
