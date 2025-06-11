@@ -16,6 +16,7 @@ import {
   where,
   orderBy,
   limit,
+  serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
 
 import {
@@ -77,7 +78,18 @@ export const runQuery = async (colName, conditions = []) => {
 };
 
 // Helpers to build query filters
-export { where, orderBy, limit, db, doc, setDoc, getDocs, collection, getDoc };
+export {
+  where,
+  orderBy,
+  limit,
+  db,
+  doc,
+  setDoc,
+  getDocs,
+  collection,
+  getDoc,
+  serverTimestamp,
+};
 
 export async function signUpWithEmail(email, password) {
   try {

@@ -118,13 +118,13 @@ document.addEventListener("click", async (e) => {
     let yourUserId = userAuth.currentUser.displayName.toLowerCase();
 
     let selectedUser = currUserTalkedWith.find(
-      (user) => user.username.toLowerCase() === currentSelectedUserId
+      (user) => user.name.toLowerCase() === currentSelectedUserId
     );
 
     // create real chat
     realChat(
       selectedUser.profilePic,
-      selectedUser.username,
+      selectedUser.name,
       currentChatId,
       messagesSection
     );
@@ -135,6 +135,8 @@ document.addEventListener("click", async (e) => {
       collection(db, "chats", currentChatId, "messages")
     );
     let allMsgsArray = allMsgs.docs.map((doc) => doc.data());
+    allMsgsArray.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
+
     setSenderId("");
 
     allMsgsArray.forEach((messageObj) => {
@@ -147,6 +149,18 @@ document.addEventListener("click", async (e) => {
         currentSelectedUserId
       );
     });
+
+    await setupMessageInputListeners(
+      selectedUser,
+      currentSelectedUserId,
+      userAuth,
+      messagesSection,
+      allChatSection,
+      chatSectionEmpty,
+      loadingChatList,
+      chatStartingPoint,
+      currentChatId
+    );
   }
 
   const userElement = e.target.closest(".user");
@@ -169,7 +183,8 @@ document.addEventListener("click", async (e) => {
     allChatSection,
     chatSectionEmpty,
     loadingChatList,
-    chatStartingPoint
+    chatStartingPoint,
+    ""
   );
 
   if (msgListened) {

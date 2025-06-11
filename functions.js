@@ -7,6 +7,8 @@ import {
   subcollectionExists,
   getDocs,
   collection,
+  updateDocument,
+  serverTimestamp,
 } from "./firebase-auth.js";
 import { realChat } from "./components/realChat.js";
 import { createFriendInChatList } from "./components/renderFriendChatList.js";
@@ -49,14 +51,14 @@ export function checkPasswordLength(password) {
   }
 }
 
-export function formattedTimestamp() {
-  const now = new Date();
-  const formattedTimestamp = now.toLocaleString("en-US", {
-    dateStyle: "long", // "June 11, 2025"
-    timeStyle: "short", // "2:23 PM"
-  });
-  return formattedTimestamp;
-}
+// export function formattedTimestamp() {
+//   const now = new Date();
+//   const formattedTimestamp = now.toLocaleString("en-US", {
+//     dateStyle: "long", // "June 11, 2025"
+//     timeStyle: "short", // "2:23 PM"
+//   });
+//   return formattedTimestamp;
+// }
 
 export function validateFields(
   isValidField,
@@ -85,7 +87,8 @@ export async function setupMessageInputListeners(
   allChatSection,
   chatSectionEmpty,
   loadingChatList,
-  chatStartingPoint
+  chatStartingPoint,
+  chatId
 ) {
   const sendVoiceMessage = document.querySelector(".send-voice-message");
   const sendCurrentMessageIcon = document.querySelector(
@@ -124,6 +127,7 @@ export async function setupMessageInputListeners(
         }
         // existing chat
         else {
+          await handleContinuousSendMessage(sendMessageInput, userAuth, chatId);
         }
       }
     });
@@ -150,6 +154,7 @@ export async function setupMessageInputListeners(
       }
       // existing chat
       else {
+        await handleContinuousSendMessage(sendMessageInput, userAuth, chatId);
       }
     });
   });
@@ -192,7 +197,7 @@ export async function handleFirstSendMessage(
     participants: [currentUser, selectedUserId.toLowerCase()],
     lastMessage: {
       content: sentMessage,
-      timestamp: formattedTimestamp(),
+      timestamp: serverTimestamp(),
     },
   });
 
@@ -203,7 +208,7 @@ export async function handleFirstSendMessage(
     messageId,
     sentFrom: currentUser,
     content: sentMessage,
-    timestamp: formattedTimestamp(),
+    timestamp: serverTimestamp(),
   });
 
   await addToTalkedWith(currentUser, selectedUserId.toLowerCase(), chatRef.id);
@@ -212,7 +217,43 @@ export async function handleFirstSendMessage(
 
   let startPoint = document.querySelector(".chat-start-point");
 
-  renderFirstMsg(user, startPoint, sentMessage, formattedTimestamp());
+  renderFirstMsg(user, startPoint, sentMessage, getTimeAgo(serverTimestamp()));
+
+  return true;
+}
+
+export async function handleContinuousSendMessage(inputEl, userAuth, chatId) {
+  const sentMessage = inputEl.value.trim();
+  if (!sentMessage) return;
+
+  inputEl.value = "";
+
+  const currentUser = userAuth.currentUser.displayName.toLowerCase();
+
+  // const chatRef = await createDoc("chats", {
+  //   isGroup: false,
+  //   lastMessage: {
+  //     content: sentMessage,
+  //     timestamp: formattedTimestamp(),
+  //   },
+  // });
+
+  const messageId = crypto.randomUUID();
+  const messageRef = doc(db, "chats", chatId, "messages", messageId);
+
+  await setDoc(messageRef, {
+    messageId,
+    sentFrom: currentUser,
+    content: sentMessage,
+    timestamp: serverTimestamp(),
+  });
+
+  await updateDocument("chats", chatId, {
+    lastMessage: {
+      content: sentMessage,
+      timestamp: serverTimestamp(),
+    },
+  });
 
   return true;
 }
@@ -281,6 +322,10 @@ export async function updateChatList(
       let userPic = getUser.data().profilePic;
 
       let getUserChat = await getDoc(doc(db, "chats", chatId));
+      if (!getUserChat.data()) {
+        loadingChatList.classList.add("hidden");
+        return false;
+      }
       let lastMessage = getUserChat.data().lastMessage.content;
       let timestamp = getUserChat.data().lastMessage.timestamp;
 
@@ -294,7 +339,7 @@ export async function updateChatList(
         allChatSection
       );
 
-      allTalkedWithArray.push({ username: userName, profilePic: userPic });
+      allTalkedWithArray.push({ name: userName, profilePic: userPic });
     });
     loadingChatList.classList.add("hidden");
     return allTalkedWithArray;
@@ -344,7 +389,7 @@ export function renderAllChatMsgs(
     if (getSenderId() !== currentSelectedUserId) {
       friendMessageContainer(
         selectedUser.profilePic,
-        selectedUser.username,
+        selectedUser.name,
         chatStartingPoint
       );
       firstFriendMessage(
@@ -371,4 +416,22 @@ export function getSenderId() {
 
 export function setSenderId(value) {
   sessionStorage.setItem("lastSenderId", JSON.stringify(value));
+}
+
+export function getTimeAgo(timestamp) {
+  const now = new Date();
+  const then = timestamp.toDate(); // Firebase Timestamp -> JS Date
+  const diff = now - then; // difference in milliseconds
+
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(diff / (1000 * 60));
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  if (seconds < 60) return `${seconds} seconds ago`;
+  if (minutes < 60) return `${minutes} minutes ago`;
+  if (hours < 24) return `${hours} hours ago`;
+  if (days < 7) return `${days} days ago`;
+
+  return then.toLocaleDateString(); // fallback to full date
 }

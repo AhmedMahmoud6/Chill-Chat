@@ -1,3 +1,5 @@
+import { getTimeAgo } from "../functions.js";
+
 export function friendMessageContainer(friendPhoto, friendName, container) {
   let msgContainerHTML = `
     <div class="grid pb-4">
@@ -30,7 +32,7 @@ export function firstFriendMessage(friendMsg, sentTime, container) {
     class="first-msg w-max max-w-xs lg:max-w-sm xl:max-w-md grid"
     >
         <div
-            class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
+            class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex w-max"
         >
             <h5
             class="text-white text-sm font-normal leading-snug"
@@ -44,7 +46,7 @@ export function firstFriendMessage(friendMsg, sentTime, container) {
             <h6
             class="text-gray-400 text-xs font-normal leading-4 py-1"
             >
-            ${sentTime}
+            ${getTimeAgo(sentTime)}
             </h6>
         </div>
     </div>
@@ -72,7 +74,7 @@ export function continuousFriendMessage(friendMsg, sentTime, container) {
             <h6
             class="text-gray-400 text-xs font-normal leading-4 py-1"
             >
-            ${sentTime}
+            ${getTimeAgo(sentTime)}
             </h6>
         </div>
     </div>
