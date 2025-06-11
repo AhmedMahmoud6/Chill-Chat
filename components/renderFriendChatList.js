@@ -1,5 +1,6 @@
 export function createFriendInChatList(
   chatId,
+  userid,
   userImg,
   username,
   lastMessage,
@@ -9,7 +10,7 @@ export function createFriendInChatList(
   let friendHTML = `
     <div
         class="friend flex items-center gap-4 hover:bg-[#49494c] px-2 rounded-lg cursor-pointer"
-        data-chatid=${chatId} >
+        data-chatid=${chatId} data-userid="${userid}" >
         <div class="profile-pic w-[50px] h-[50px] flex-shrink-0">
             <img
             class="w-full h-full rounded-full object-cover"

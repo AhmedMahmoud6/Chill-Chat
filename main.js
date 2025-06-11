@@ -39,13 +39,14 @@ let loadingChatList = document.querySelector(".loading-chat-list");
 let userAuth = auth;
 let allUsers;
 let filteredUsers;
+let currUserTalkedWith;
 
 // check if there's a talkedWith user
 observeAuthState(async (user) => {
   if (!user) return;
 
   const userDisplayName = user.displayName.toLowerCase();
-  await updateChatList(
+  currUserTalkedWith = await updateChatList(
     userDisplayName,
     allChatSection,
     chatSectionEmpty,
@@ -100,6 +101,21 @@ newChatContainer.addEventListener("click", (e) => {
 });
 
 document.addEventListener("click", async (e) => {
+  const friendRef = e.target.closest(".friend");
+  if (friendRef) {
+    let currentChatId = friendRef.dataset.chatid;
+    let currentSelectedUserId = friendRef.dataset.userid;
+    let selectedUser = currUserTalkedWith.find(
+      (user) => user.username.toLowerCase() === currentSelectedUserId
+    );
+    realChat(
+      selectedUser.profilePic,
+      selectedUser.username,
+      currentChatId,
+      messagesSection
+    );
+  }
+
   const userElement = e.target.closest(".user");
   if (!userElement) return;
 

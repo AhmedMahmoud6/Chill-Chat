@@ -261,6 +261,8 @@ export async function updateChatList(
       )
     );
 
+    let allTalkedWithArray = [];
+
     allTalkedWith.forEach(async (element) => {
       let chatId = element.data().chatId;
       let userId = element.id;
@@ -275,13 +277,17 @@ export async function updateChatList(
 
       createFriendInChatList(
         chatId,
+        userId,
         userPic,
         userName,
         lastMessage,
         timestamp,
         allChatSection
       );
+
+      allTalkedWithArray.push({ username: userName, profilePic: userPic });
     });
+    loadingChatList.classList.add("hidden");
+    return allTalkedWithArray;
   }
-  loadingChatList.classList.add("hidden");
 }
