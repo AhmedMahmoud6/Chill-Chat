@@ -1,6 +1,5 @@
 import {
   getCollectionRef,
-  subcollectionExists,
   auth,
   observeAuthState,
   getAllUserNames,
@@ -10,11 +9,12 @@ import {
   db,
 } from "./firebase-auth.js";
 
-import { setupMessageInputListeners } from "./functions.js";
+import { setupMessageInputListeners, updateChatList } from "./functions.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
 import { realChat } from "./components/realChat.js";
 import { tempChat } from "./components/tempChat.js";
+import { createFriendInChatList } from "./components/renderFriendChatList.js";
 import {
   yourMessageContainer,
   firstYourMessage,
@@ -43,22 +43,8 @@ let filteredUsers;
 observeAuthState(async (user) => {
   if (!user) return;
 
-  const userDisplayName = user.displayName;
-
-  const talkedWithUsers = await subcollectionExists(
-    "users",
-    userDisplayName,
-    "talkedWith"
-  );
-
-  // if chat list is empty
-  if (!talkedWithUsers) {
-    allChatSection.classList.add("hidden");
-    chatSectionEmpty.classList.remove("hidden");
-  } else {
-    chatSectionEmpty.classList.add("hidden");
-    allChatSection.classList.remove("hidden");
-  }
+  const userDisplayName = user.displayName.toLowerCase();
+  updateChatList(userDisplayName, allChatSection, chatSectionEmpty, userAuth);
   newChat.classList.remove("hidden");
 });
 

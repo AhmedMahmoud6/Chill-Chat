@@ -1,5 +1,15 @@
-import { createDoc, setDoc, doc, db } from "./firebase-auth.js";
+import {
+  createDoc,
+  setDoc,
+  getDoc,
+  doc,
+  db,
+  subcollectionExists,
+  getDocs,
+  collection,
+} from "./firebase-auth.js";
 import { realChat } from "./components/realChat.js";
+import { createFriendInChatList } from "./components/renderFriendChatList.js";
 
 export function isValidFullName(name) {
   const regex = /^[A-Za-z][A-Za-z0-9\s'-@_.!$%*#&()]*$/;
@@ -88,8 +98,14 @@ export async function setupMessageInputListeners(
     }
   });
 
-  sendCurrentMessageIcon.addEventListener("click", () => {
-    console.log("submitting Message");
+  sendCurrentMessageIcon.addEventListener("click", async () => {
+    await handleSendMessage(
+      sendMessageInput,
+      selectedUserId,
+      user,
+      userAuth,
+      messagesSection
+    );
   });
 }
 
@@ -155,4 +171,57 @@ export async function addToTalkedWith(currentUser, otherUser, chatId) {
     setDoc(youTalkedWithRef, { chatId }),
     setDoc(heTalkedWithRef, { chatId }),
   ]);
+}
+
+export async function updateChatList(
+  userDisplayName,
+  allChatSection,
+  chatSectionEmpty,
+  userAuth
+) {
+  const talkedWithUsers = await subcollectionExists(
+    "users",
+    userDisplayName,
+    "talkedWith"
+  );
+
+  // if chat list is empty
+  if (!talkedWithUsers) {
+    allChatSection.classList.add("hidden");
+    chatSectionEmpty.classList.remove("hidden");
+  } else {
+    chatSectionEmpty.classList.add("hidden");
+    allChatSection.classList.remove("hidden");
+
+    const allTalkedWith = await getDocs(
+      collection(
+        db,
+        "users",
+        userAuth.currentUser.displayName.toLowerCase(),
+        "talkedWith"
+      )
+    );
+
+    allTalkedWith.forEach(async (element) => {
+      let chatId = element.data().chatId;
+      let userId = element.id;
+
+      let getUser = await getDoc(doc(db, "users", userId));
+      let userName = getUser.data().name;
+      let userPic = getUser.data().profilePic;
+
+      let getUserChat = await getDoc(doc(db, "chats", chatId));
+      let lastMessage = getUserChat.data().lastMessage.content;
+      let timestamp = getUserChat.data().lastMessage.timestamp;
+
+      createFriendInChatList(
+        chatId,
+        userPic,
+        userName,
+        lastMessage,
+        timestamp,
+        allChatSection
+      );
+    });
+  }
 }

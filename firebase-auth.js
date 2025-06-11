@@ -77,7 +77,7 @@ export const runQuery = async (colName, conditions = []) => {
 };
 
 // Helpers to build query filters
-export { where, orderBy, limit, db, doc, setDoc };
+export { where, orderBy, limit, db, doc, setDoc, getDocs, collection, getDoc };
 
 export async function signUpWithEmail(email, password) {
   try {
