@@ -1,8 +1,9 @@
-export function tempChat(userImg, username, messagesSection) {
+export function tempChat(userImg, username, userid, messagesSection) {
   messagesSection.innerHTML = "";
   let tempChatHTML = `
               <div
             class="opened-chat h-full min-w-120 flex flex-col max-[875px]:min-w-0 flex-1 max-[875px]:flex-0"
+            data-userid="${userid}"
           >
             <div
               class="contact-info relative bg-[#49494c] w-full h-16 flex justify-between items-center px-8"

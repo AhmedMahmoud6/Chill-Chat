@@ -4,6 +4,10 @@ import {
   auth,
   observeAuthState,
   getAllUserNames,
+  createDoc,
+  setDoc,
+  doc,
+  db,
 } from "./firebase-auth.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
@@ -26,7 +30,6 @@ let allChatSection = document.querySelector(".section-all-chats");
 let newChat = document.querySelector(".new-chat");
 let newChatContainer = document.querySelector(".new-chat-container");
 let newChatSearch = document.querySelector(".new-chat-search");
-let openedChat = document.querySelector(".opened-chat");
 let foundedUsersDiv = document.querySelector(".founded-users");
 let noUsersFound = document.querySelector(".no-users");
 
@@ -109,7 +112,7 @@ document.addEventListener("click", (e) => {
 
     filteredUsers.forEach((user) => {
       if (user.name === selectedUserId) {
-        tempChat(user.profilePic, user.name, messagesSection);
+        tempChat(user.profilePic, user.name, selectedUserId, messagesSection);
         let sendVoiceMessage = document.querySelector(".send-voice-message");
         let sendCurrentMessageIcon = document.querySelector(
           ".send-current-message"
@@ -130,9 +133,74 @@ document.addEventListener("click", (e) => {
           });
 
           // send message by pressing enter
-          sendMessageInput.addEventListener("keydown", (e) => {
+          sendMessageInput.addEventListener("keydown", async (e) => {
             if (e.key === "Enter") {
-              console.log("submitting Message");
+              let sentMessage = sendMessageInput.value;
+              sendMessageInput.value = "";
+              const now = new Date();
+              const formattedTimestamp = now.toLocaleString("en-US", {
+                dateStyle: "long", // "June 11, 2025"
+                timeStyle: "short", // "2:23 PM"
+              });
+
+              // create chat collection and its chat document
+              const chatRef = await createDoc("chats", {
+                isGroup: false,
+                participants: [
+                  userAuth.currentUser.displayName,
+                  selectedUserId,
+                ],
+                lastMessage: {
+                  content: sentMessage,
+                  timestamp: formattedTimestamp,
+                },
+              });
+
+              // create messages subcollection in the chat id
+
+              const messageId = crypto.randomUUID(); // generate a unique ID
+              const messageRef = doc(
+                db,
+                "chats",
+                chatRef.id,
+                "messages",
+                messageId
+              );
+
+              await setDoc(messageRef, {
+                messageId: messageId,
+                sentFrom: userAuth.currentUser.displayName,
+                content: sentMessage,
+                timestamp: formattedTimestamp,
+              });
+
+              // add user to talkedWith subcollection
+              const youTalkedWithRef = doc(
+                db,
+                "users",
+                userAuth.currentUser.displayName.toLowerCase(),
+                "talkedWith",
+                selectedUserId
+              );
+
+              const heTalkedWithRef = doc(
+                db,
+                "users",
+                selectedUserId,
+                "talkedWith",
+                userAuth.currentUser.displayName.toLowerCase()
+              );
+
+              // adding the chatted with user to talkedWith list
+              await setDoc(youTalkedWithRef, {
+                chatId: chatRef.id,
+              });
+              // adding you to the user talkedWith list
+              await setDoc(heTalkedWithRef, {
+                chatId: chatRef.id,
+              });
+
+              realChat(user.profilePic, user.name, chatRef.id, messagesSection);
             }
           });
 
