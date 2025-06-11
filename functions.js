@@ -71,7 +71,10 @@ export async function setupMessageInputListeners(
   user,
   selectedUserId,
   userAuth,
-  messagesSection
+  messagesSection,
+  allChatSection,
+  chatSectionEmpty,
+  loadingChatList
 ) {
   const sendVoiceMessage = document.querySelector(".send-voice-message");
   const sendCurrentMessageIcon = document.querySelector(
@@ -88,23 +91,29 @@ export async function setupMessageInputListeners(
 
   sendMessageInput.addEventListener("keydown", async (e) => {
     if (e.key === "Enter") {
-      await handleSendMessage(
+      await handleFirstSendMessage(
         sendMessageInput,
         selectedUserId,
         user,
         userAuth,
-        messagesSection
+        messagesSection,
+        allChatSection,
+        chatSectionEmpty,
+        loadingChatList
       );
     }
   });
 
   sendCurrentMessageIcon.addEventListener("click", async () => {
-    await handleSendMessage(
+    await handleFirstSendMessage(
       sendMessageInput,
       selectedUserId,
       user,
       userAuth,
-      messagesSection
+      messagesSection,
+      allChatSection,
+      chatSectionEmpty,
+      loadingChatList
     );
   });
 }
@@ -114,12 +123,15 @@ export function toggleSendIcons(voiceIcon, sendIcon, showVoice) {
   sendIcon.classList.toggle("hidden", showVoice);
 }
 
-export async function handleSendMessage(
+export async function handleFirstSendMessage(
   inputEl,
   selectedUserId,
   user,
   userAuth,
-  messagesSection
+  messagesSection,
+  allChatSection,
+  chatSectionEmpty,
+  loadingChatList
 ) {
   const sentMessage = inputEl.value.trim();
   if (!sentMessage) return;
@@ -149,6 +161,15 @@ export async function handleSendMessage(
   await addToTalkedWith(currentUser, selectedUserId.toLowerCase(), chatRef.id);
 
   realChat(user.profilePic, user.name, chatRef.id, messagesSection);
+
+  console.log("yse");
+  await updateChatList(
+    user.name.toLowerCase(),
+    allChatSection,
+    chatSectionEmpty,
+    userAuth,
+    loadingChatList
+  );
 }
 
 export async function addToTalkedWith(currentUser, otherUser, chatId) {

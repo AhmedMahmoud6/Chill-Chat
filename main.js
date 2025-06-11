@@ -45,7 +45,7 @@ observeAuthState(async (user) => {
   if (!user) return;
 
   const userDisplayName = user.displayName.toLowerCase();
-  updateChatList(
+  await updateChatList(
     userDisplayName,
     allChatSection,
     chatSectionEmpty,
@@ -115,6 +115,9 @@ document.addEventListener("click", async (e) => {
     user,
     selectedUserId,
     userAuth,
-    messagesSection
+    messagesSection,
+    allChatSection,
+    chatSectionEmpty,
+    loadingChatList
   );
 });
