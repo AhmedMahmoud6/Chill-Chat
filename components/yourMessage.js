@@ -27,7 +27,7 @@ export function firstYourMessage(yourMsg, sentTime, container) {
         >
         You
         </h5>
-        <div class="px-3 py-2 bg-[#6366f1] relative rounded">
+        <div class="px-3 py-2 bg-[#6366f1] relative rounded ml-auto">
         <h2 class="text-white text-sm font-normal leading-snug">
             ${yourMsg}
         </h2>

@@ -111,6 +111,7 @@ document.addEventListener("click", async (e) => {
   newChatContainer.classList.add("hidden");
 
   tempChat(user.profilePic, user.name, selectedUserId, messagesSection);
+  let chatStartingPoint = document.querySelector(".chat-start-point");
   await setupMessageInputListeners(
     user,
     selectedUserId,
@@ -118,6 +119,7 @@ document.addEventListener("click", async (e) => {
     messagesSection,
     allChatSection,
     chatSectionEmpty,
-    loadingChatList
+    loadingChatList,
+    chatStartingPoint
   );
 });

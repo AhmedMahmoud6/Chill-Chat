@@ -10,6 +10,11 @@ import {
 } from "./firebase-auth.js";
 import { realChat } from "./components/realChat.js";
 import { createFriendInChatList } from "./components/renderFriendChatList.js";
+import {
+  yourMessageContainer,
+  continuousYourMessage,
+  firstYourMessage,
+} from "./components/yourMessage.js";
 
 export function isValidFullName(name) {
   const regex = /^[A-Za-z][A-Za-z0-9\s'-@_.!$%*#&()]*$/;
@@ -74,7 +79,8 @@ export async function setupMessageInputListeners(
   messagesSection,
   allChatSection,
   chatSectionEmpty,
-  loadingChatList
+  loadingChatList,
+  chatStartingPoint
 ) {
   const sendVoiceMessage = document.querySelector(".send-voice-message");
   const sendCurrentMessageIcon = document.querySelector(
@@ -91,6 +97,30 @@ export async function setupMessageInputListeners(
 
   sendMessageInput.addEventListener("keydown", async (e) => {
     if (e.key === "Enter") {
+      // new chat
+      if (messagesSection.querySelector(".opened-chat")) {
+        renderFirstMsg(user, chatStartingPoint, sendMessageInput.value);
+        await handleFirstSendMessage(
+          sendMessageInput,
+          selectedUserId,
+          user,
+          userAuth,
+          messagesSection,
+          allChatSection,
+          chatSectionEmpty,
+          loadingChatList
+        );
+      }
+      // existing chat
+      else {
+      }
+    }
+  });
+
+  sendCurrentMessageIcon.addEventListener("click", async () => {
+    // new chat
+    if (messagesSection.querySelector(".opened-chat")) {
+      renderFirstMsg(user, chatStartingPoint, sendMessageInput.value);
       await handleFirstSendMessage(
         sendMessageInput,
         selectedUserId,
@@ -102,25 +132,29 @@ export async function setupMessageInputListeners(
         loadingChatList
       );
     }
-  });
-
-  sendCurrentMessageIcon.addEventListener("click", async () => {
-    await handleFirstSendMessage(
-      sendMessageInput,
-      selectedUserId,
-      user,
-      userAuth,
-      messagesSection,
-      allChatSection,
-      chatSectionEmpty,
-      loadingChatList
-    );
+    // existing chat
+    else {
+    }
   });
 }
 
 export function toggleSendIcons(voiceIcon, sendIcon, showVoice) {
   voiceIcon.classList.toggle("hidden", !showVoice);
   sendIcon.classList.toggle("hidden", showVoice);
+}
+
+export function renderFirstMsg(
+  user,
+  chatStartingPoint,
+  sendMessageInput,
+  timestamp = ""
+) {
+  yourMessageContainer(user.profilePic, chatStartingPoint);
+  firstYourMessage(
+    sendMessageInput,
+    timestamp,
+    document.querySelector(".your-msg-container")
+  );
 }
 
 export async function handleFirstSendMessage(
@@ -162,7 +196,10 @@ export async function handleFirstSendMessage(
 
   realChat(user.profilePic, user.name, chatRef.id, messagesSection);
 
-  console.log("yse");
+  let startPoint = document.querySelector(".chat-start-point");
+
+  renderFirstMsg(user, startPoint, sentMessage, formattedTimestamp());
+
   await updateChatList(
     user.name.toLowerCase(),
     allChatSection,
