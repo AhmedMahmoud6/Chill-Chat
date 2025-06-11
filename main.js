@@ -12,7 +12,12 @@ import {
   collection,
 } from "./firebase-auth.js";
 
-import { setupMessageInputListeners, updateChatList } from "./functions.js";
+import {
+  setupMessageInputListeners,
+  updateChatList,
+  renderAllChatMsgs,
+  setSenderId,
+} from "./functions.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
 import { realChat } from "./components/realChat.js";
@@ -38,6 +43,7 @@ let newChatSearch = document.querySelector(".new-chat-search");
 let foundedUsersDiv = document.querySelector(".founded-users");
 let noUsersFound = document.querySelector(".no-users");
 let loadingChatList = document.querySelector(".loading-chat-list");
+let chatStartingPoint;
 
 let userAuth = auth;
 let allUsers;
@@ -105,32 +111,41 @@ newChatContainer.addEventListener("click", (e) => {
 
 document.addEventListener("click", async (e) => {
   const friendRef = e.target.closest(".friend");
+  // if clicked on friend in the chatlist
   if (friendRef) {
     let currentChatId = friendRef.dataset.chatid;
     let currentSelectedUserId = friendRef.dataset.userid;
-    console.log(currUserTalkedWith);
+    let yourUserId = userAuth.currentUser.displayName.toLowerCase();
+
     let selectedUser = currUserTalkedWith.find(
       (user) => user.username.toLowerCase() === currentSelectedUserId
     );
+
+    // create real chat
     realChat(
       selectedUser.profilePic,
       selectedUser.username,
       currentChatId,
       messagesSection
     );
+
+    // update the chatStartingPoint
+    chatStartingPoint = document.querySelector(".chat-start-point");
     let allMsgs = await getDocs(
       collection(db, "chats", currentChatId, "messages")
     );
     let allMsgsArray = allMsgs.docs.map((doc) => doc.data());
+    setSenderId("");
 
     allMsgsArray.forEach((messageObj) => {
-      // if the message sent by you
-      if (
-        messageObj.sentFrom === userAuth.currentUser.displayName.toLowerCase()
-      ) {
-        // yourMessageContainer()
-        console.log(userAuth);
-      }
+      renderAllChatMsgs(
+        messageObj,
+        yourUserId,
+        userAuth,
+        chatStartingPoint,
+        selectedUser,
+        currentSelectedUserId
+      );
     });
   }
 
@@ -145,7 +160,7 @@ document.addEventListener("click", async (e) => {
   newChatContainer.classList.add("hidden");
 
   tempChat(user.profilePic, user.name, selectedUserId, messagesSection);
-  let chatStartingPoint = document.querySelector(".chat-start-point");
+  chatStartingPoint = document.querySelector(".chat-start-point");
   let msgListened = await setupMessageInputListeners(
     user,
     selectedUserId,
@@ -158,7 +173,6 @@ document.addEventListener("click", async (e) => {
   );
 
   if (msgListened) {
-    console.log("yes", msgListened);
     currUserTalkedWith = await updateChatList(
       userAuth.currentUser.displayName.toLowerCase(),
       allChatSection,
@@ -166,5 +180,5 @@ document.addEventListener("click", async (e) => {
       userAuth,
       loadingChatList
     );
-  } else console.log("no", msgListened);
+  }
 });

@@ -11,6 +11,11 @@ import {
 import { realChat } from "./components/realChat.js";
 import { createFriendInChatList } from "./components/renderFriendChatList.js";
 import {
+  friendMessageContainer,
+  continuousFriendMessage,
+  firstFriendMessage,
+} from "./components/friendMessage.js";
+import {
   yourMessageContainer,
   continuousYourMessage,
   firstYourMessage,
@@ -174,10 +179,7 @@ export async function handleFirstSendMessage(
   selectedUserId,
   user,
   userAuth,
-  messagesSection,
-  allChatSection,
-  chatSectionEmpty,
-  loadingChatList
+  messagesSection
 ) {
   const sentMessage = inputEl.value.trim();
   if (!sentMessage) return;
@@ -297,4 +299,76 @@ export async function updateChatList(
     loadingChatList.classList.add("hidden");
     return allTalkedWithArray;
   }
+}
+
+export function renderAllChatMsgs(
+  messageObj,
+  yourUserId,
+  userAuth,
+  chatStartingPoint,
+  selectedUser,
+  currentSelectedUserId
+) {
+  // if the message sent by you
+  if (messageObj.sentFrom === yourUserId) {
+    if (document.querySelector(".friend-message-section"))
+      document
+        .querySelector(".friend-message-section")
+        .classList.remove("friend-message-section");
+    // if the last user who sent the message is not you (starting from the first of the messages)
+    if (getSenderId() !== yourUserId) {
+      yourMessageContainer(userAuth.currentUser.photoURL, chatStartingPoint);
+      firstYourMessage(
+        messageObj.content,
+        messageObj.timestamp,
+        document.querySelector(".your-msg-container")
+      );
+      setSenderId(yourUserId);
+    }
+    // if the last user who sent the message is sent by you
+    else {
+      continuousYourMessage(
+        messageObj.content,
+        messageObj.timestamp,
+        document.querySelector(".your-msg-container")
+      );
+    }
+  }
+  // if the message is not sent by you
+  else {
+    if (document.querySelector(".your-msg-container"))
+      document
+        .querySelector(".your-msg-container")
+        .classList.remove("your-msg-container");
+    // if the last user who sent the message is you
+    if (getSenderId() !== currentSelectedUserId) {
+      friendMessageContainer(
+        selectedUser.profilePic,
+        selectedUser.username,
+        chatStartingPoint
+      );
+      firstFriendMessage(
+        messageObj.content,
+        messageObj.timestamp,
+        document.querySelector(".friend-message-section")
+      );
+      setSenderId(currentSelectedUserId);
+    }
+    // if the last user who sent the message is sent by your friend
+    else {
+      continuousFriendMessage(
+        messageObj.content,
+        messageObj.timestamp,
+        document.querySelector(".friend-message-section")
+      );
+    }
+  }
+}
+
+export function getSenderId() {
+  return JSON.parse(sessionStorage.getItem("lastSenderId")) || "";
+}
+
+export function setSenderId(value) {
+  sessionStorage.setItem("lastSenderId", JSON.stringify(value));
 }
