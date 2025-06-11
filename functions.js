@@ -26,6 +26,15 @@ export function checkPasswordLength(password) {
   }
 }
 
+export function formattedTimestamp() {
+  const now = new Date();
+  const formattedTimestamp = now.toLocaleString("en-US", {
+    dateStyle: "long", // "June 11, 2025"
+    timeStyle: "short", // "2:23 PM"
+  });
+  return formattedTimestamp;
+}
+
 export function validateFields(
   isValidField,
   fieldName,

@@ -10,6 +10,8 @@ import {
   db,
 } from "./firebase-auth.js";
 
+import { formattedTimestamp } from "./functions.js";
+
 import { displayFoundedUsers } from "./components/newChat.js";
 import { realChat } from "./components/realChat.js";
 import { tempChat } from "./components/tempChat.js";
@@ -137,22 +139,17 @@ document.addEventListener("click", (e) => {
             if (e.key === "Enter") {
               let sentMessage = sendMessageInput.value;
               sendMessageInput.value = "";
-              const now = new Date();
-              const formattedTimestamp = now.toLocaleString("en-US", {
-                dateStyle: "long", // "June 11, 2025"
-                timeStyle: "short", // "2:23 PM"
-              });
 
               // create chat collection and its chat document
               const chatRef = await createDoc("chats", {
                 isGroup: false,
                 participants: [
-                  userAuth.currentUser.displayName,
-                  selectedUserId,
+                  userAuth.currentUser.displayName.toLowerCase(),
+                  selectedUserId.toLowerCase(),
                 ],
                 lastMessage: {
                   content: sentMessage,
-                  timestamp: formattedTimestamp,
+                  timestamp: formattedTimestamp(),
                 },
               });
 
@@ -169,9 +166,9 @@ document.addEventListener("click", (e) => {
 
               await setDoc(messageRef, {
                 messageId: messageId,
-                sentFrom: userAuth.currentUser.displayName,
+                sentFrom: userAuth.currentUser.displayName.toLowerCase(),
                 content: sentMessage,
-                timestamp: formattedTimestamp,
+                timestamp: formattedTimestamp(),
               });
 
               // add user to talkedWith subcollection
@@ -180,13 +177,13 @@ document.addEventListener("click", (e) => {
                 "users",
                 userAuth.currentUser.displayName.toLowerCase(),
                 "talkedWith",
-                selectedUserId
+                selectedUserId.toLowerCase()
               );
 
               const heTalkedWithRef = doc(
                 db,
                 "users",
-                selectedUserId,
+                selectedUserId.toLowerCase(),
                 "talkedWith",
                 userAuth.currentUser.displayName.toLowerCase()
               );
