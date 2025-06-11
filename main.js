@@ -125,7 +125,3 @@ document.addEventListener("click", async (e) => {
     messagesSection
   );
 });
-
-// ----------------------
-// 💬 Modular Functions
-// ----------------------
