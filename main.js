@@ -34,6 +34,7 @@ let newChatContainer = document.querySelector(".new-chat-container");
 let newChatSearch = document.querySelector(".new-chat-search");
 let foundedUsersDiv = document.querySelector(".founded-users");
 let noUsersFound = document.querySelector(".no-users");
+let loadingChatList = document.querySelector(".loading-chat-list");
 
 let userAuth = auth;
 let allUsers;
@@ -44,7 +45,13 @@ observeAuthState(async (user) => {
   if (!user) return;
 
   const userDisplayName = user.displayName.toLowerCase();
-  updateChatList(userDisplayName, allChatSection, chatSectionEmpty, userAuth);
+  updateChatList(
+    userDisplayName,
+    allChatSection,
+    chatSectionEmpty,
+    userAuth,
+    loadingChatList
+  );
   newChat.classList.remove("hidden");
 });
 

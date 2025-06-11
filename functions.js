@@ -177,7 +177,8 @@ export async function updateChatList(
   userDisplayName,
   allChatSection,
   chatSectionEmpty,
-  userAuth
+  userAuth,
+  loadingChatList
 ) {
   const talkedWithUsers = await subcollectionExists(
     "users",
@@ -224,4 +225,5 @@ export async function updateChatList(
       );
     });
   }
+  loadingChatList.classList.add("hidden");
 }
