@@ -95,12 +95,39 @@ export async function setupMessageInputListeners(
     toggleSendIcons(sendVoiceMessage, sendCurrentMessageIcon, isEmpty);
   });
 
-  sendMessageInput.addEventListener("keydown", async (e) => {
-    if (e.key === "Enter") {
+  return new Promise((resolve) => {
+    sendMessageInput.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter") {
+        // new chat
+        if (messagesSection.querySelector(".opened-chat")) {
+          renderFirstMsg(user, chatStartingPoint, sendMessageInput.value);
+          let msgHandled = await handleFirstSendMessage(
+            sendMessageInput,
+            selectedUserId,
+            user,
+            userAuth,
+            messagesSection,
+            allChatSection,
+            chatSectionEmpty,
+            loadingChatList
+          );
+
+          if (msgHandled) {
+            resolve(true);
+            return true;
+          }
+        }
+        // existing chat
+        else {
+        }
+      }
+    });
+
+    sendCurrentMessageIcon.addEventListener("click", async () => {
       // new chat
       if (messagesSection.querySelector(".opened-chat")) {
         renderFirstMsg(user, chatStartingPoint, sendMessageInput.value);
-        await handleFirstSendMessage(
+        let msgHandled = await handleFirstSendMessage(
           sendMessageInput,
           selectedUserId,
           user,
@@ -110,31 +137,16 @@ export async function setupMessageInputListeners(
           chatSectionEmpty,
           loadingChatList
         );
+
+        if (msgHandled) {
+          resolve(true);
+          return true;
+        }
       }
       // existing chat
       else {
       }
-    }
-  });
-
-  sendCurrentMessageIcon.addEventListener("click", async () => {
-    // new chat
-    if (messagesSection.querySelector(".opened-chat")) {
-      renderFirstMsg(user, chatStartingPoint, sendMessageInput.value);
-      await handleFirstSendMessage(
-        sendMessageInput,
-        selectedUserId,
-        user,
-        userAuth,
-        messagesSection,
-        allChatSection,
-        chatSectionEmpty,
-        loadingChatList
-      );
-    }
-    // existing chat
-    else {
-    }
+    });
   });
 }
 
@@ -200,13 +212,7 @@ export async function handleFirstSendMessage(
 
   renderFirstMsg(user, startPoint, sentMessage, formattedTimestamp());
 
-  await updateChatList(
-    user.name.toLowerCase(),
-    allChatSection,
-    chatSectionEmpty,
-    userAuth,
-    loadingChatList
-  );
+  return true;
 }
 
 export async function addToTalkedWith(currentUser, otherUser, chatId) {
@@ -248,6 +254,7 @@ export async function updateChatList(
   if (!talkedWithUsers) {
     allChatSection.classList.add("hidden");
     chatSectionEmpty.classList.remove("hidden");
+    loadingChatList.classList.add("hidden");
   } else {
     chatSectionEmpty.classList.add("hidden");
     allChatSection.classList.remove("hidden");

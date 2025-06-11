@@ -7,6 +7,9 @@ import {
   setDoc,
   doc,
   db,
+  getDoc,
+  getDocs,
+  collection,
 } from "./firebase-auth.js";
 
 import { setupMessageInputListeners, updateChatList } from "./functions.js";
@@ -105,6 +108,7 @@ document.addEventListener("click", async (e) => {
   if (friendRef) {
     let currentChatId = friendRef.dataset.chatid;
     let currentSelectedUserId = friendRef.dataset.userid;
+    console.log(currUserTalkedWith);
     let selectedUser = currUserTalkedWith.find(
       (user) => user.username.toLowerCase() === currentSelectedUserId
     );
@@ -114,6 +118,20 @@ document.addEventListener("click", async (e) => {
       currentChatId,
       messagesSection
     );
+    let allMsgs = await getDocs(
+      collection(db, "chats", currentChatId, "messages")
+    );
+    let allMsgsArray = allMsgs.docs.map((doc) => doc.data());
+
+    allMsgsArray.forEach((messageObj) => {
+      // if the message sent by you
+      if (
+        messageObj.sentFrom === userAuth.currentUser.displayName.toLowerCase()
+      ) {
+        // yourMessageContainer()
+        console.log(userAuth);
+      }
+    });
   }
 
   const userElement = e.target.closest(".user");
@@ -128,7 +146,7 @@ document.addEventListener("click", async (e) => {
 
   tempChat(user.profilePic, user.name, selectedUserId, messagesSection);
   let chatStartingPoint = document.querySelector(".chat-start-point");
-  await setupMessageInputListeners(
+  let msgListened = await setupMessageInputListeners(
     user,
     selectedUserId,
     userAuth,
@@ -138,4 +156,15 @@ document.addEventListener("click", async (e) => {
     loadingChatList,
     chatStartingPoint
   );
+
+  if (msgListened) {
+    console.log("yes", msgListened);
+    currUserTalkedWith = await updateChatList(
+      userAuth.currentUser.displayName.toLowerCase(),
+      allChatSection,
+      chatSectionEmpty,
+      userAuth,
+      loadingChatList
+    );
+  } else console.log("no", msgListened);
 });
