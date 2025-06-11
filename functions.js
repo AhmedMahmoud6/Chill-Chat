@@ -1,3 +1,6 @@
+import { createDoc, setDoc, doc, db } from "./firebase-auth.js";
+import { realChat } from "./components/realChat.js";
+
 export function isValidFullName(name) {
   const regex = /^[A-Za-z][A-Za-z0-9\s'-@_.!$%*#&()]*$/;
   return regex.test(name.trim());
@@ -52,4 +55,203 @@ export function validateFields(
     fieldNameError.classList.add("hidden");
     return true;
   }
+}
+
+// async function createNewChat(
+//   filteredUsers,
+//   selectedUserId,
+//   messagesSection,
+//   userAuth
+// ) {
+//   filteredUsers.forEach((user) => {
+//     if (user.name === selectedUserId) {
+//       tempChat(user.profilePic, user.name, selectedUserId, messagesSection);
+//       let sendVoiceMessage = document.querySelector(".send-voice-message");
+//       let sendCurrentMessageIcon = document.querySelector(
+//         ".send-current-message"
+//       );
+
+//       let sendMessageInput = document.querySelector(".send-message-input");
+
+//       if (sendMessageInput) {
+//         sendMessageInput.addEventListener("input", (e) => {
+//           // update the send icon and voice icon
+//           if (e.target.value === "") {
+//             sendVoiceMessage.classList.remove("hidden");
+//             sendCurrentMessageIcon.classList.add("hidden");
+//           } else {
+//             sendVoiceMessage.classList.add("hidden");
+//             sendCurrentMessageIcon.classList.remove("hidden");
+//           }
+//         });
+
+//         // send message by pressing enter
+//         sendMessageInput.addEventListener("keydown", async (e) => {
+//           if (e.key === "Enter") {
+//             let sentMessage = sendMessageInput.value;
+//             sendMessageInput.value = "";
+
+//             // create chat collection and its chat document
+//             const chatRef = await createDoc("chats", {
+//               isGroup: false,
+//               participants: [
+//                 userAuth.currentUser.displayName.toLowerCase(),
+//                 selectedUserId.toLowerCase(),
+//               ],
+//               lastMessage: {
+//                 content: sentMessage,
+//                 timestamp: formattedTimestamp(),
+//               },
+//             });
+
+//             // create messages subcollection in the chat id
+
+//             const messageId = crypto.randomUUID(); // generate a unique ID
+//             const messageRef = doc(
+//               db,
+//               "chats",
+//               chatRef.id,
+//               "messages",
+//               messageId
+//             );
+
+//             await setDoc(messageRef, {
+//               messageId: messageId,
+//               sentFrom: userAuth.currentUser.displayName.toLowerCase(),
+//               content: sentMessage,
+//               timestamp: formattedTimestamp(),
+//             });
+
+//             // add user to talkedWith subcollection
+//             const youTalkedWithRef = doc(
+//               db,
+//               "users",
+//               userAuth.currentUser.displayName.toLowerCase(),
+//               "talkedWith",
+//               selectedUserId.toLowerCase()
+//             );
+
+//             const heTalkedWithRef = doc(
+//               db,
+//               "users",
+//               selectedUserId.toLowerCase(),
+//               "talkedWith",
+//               userAuth.currentUser.displayName.toLowerCase()
+//             );
+
+//             // adding the chatted with user to talkedWith list
+//             await setDoc(youTalkedWithRef, {
+//               chatId: chatRef.id,
+//             });
+//             // adding you to the user talkedWith list
+//             await setDoc(heTalkedWithRef, {
+//               chatId: chatRef.id,
+//             });
+
+//             realChat(user.profilePic, user.name, chatRef.id, messagesSection);
+//           }
+//         });
+//       }
+//     }
+//   });
+// }
+
+export async function setupMessageInputListeners(
+  user,
+  selectedUserId,
+  userAuth,
+  messagesSection
+) {
+  const sendVoiceMessage = document.querySelector(".send-voice-message");
+  const sendCurrentMessageIcon = document.querySelector(
+    ".send-current-message"
+  );
+  const sendMessageInput = document.querySelector(".send-message-input");
+
+  if (!sendMessageInput) return;
+
+  sendMessageInput.addEventListener("input", (e) => {
+    const isEmpty = e.target.value === "";
+    toggleSendIcons(sendVoiceMessage, sendCurrentMessageIcon, isEmpty);
+  });
+
+  sendMessageInput.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+      await handleSendMessage(
+        sendMessageInput,
+        selectedUserId,
+        user,
+        userAuth,
+        messagesSection
+      );
+    }
+  });
+
+  sendCurrentMessageIcon.addEventListener("click", () => {
+    console.log("submitting Message");
+  });
+}
+
+export function toggleSendIcons(voiceIcon, sendIcon, showVoice) {
+  voiceIcon.classList.toggle("hidden", !showVoice);
+  sendIcon.classList.toggle("hidden", showVoice);
+}
+
+export async function handleSendMessage(
+  inputEl,
+  selectedUserId,
+  user,
+  userAuth,
+  messagesSection
+) {
+  const sentMessage = inputEl.value.trim();
+  if (!sentMessage) return;
+
+  inputEl.value = "";
+
+  const currentUser = userAuth.currentUser.displayName.toLowerCase();
+  const chatRef = await createDoc("chats", {
+    isGroup: false,
+    participants: [currentUser, selectedUserId.toLowerCase()],
+    lastMessage: {
+      content: sentMessage,
+      timestamp: formattedTimestamp(),
+    },
+  });
+
+  const messageId = crypto.randomUUID();
+  const messageRef = doc(db, "chats", chatRef.id, "messages", messageId);
+
+  await setDoc(messageRef, {
+    messageId,
+    sentFrom: currentUser,
+    content: sentMessage,
+    timestamp: formattedTimestamp(),
+  });
+
+  await addToTalkedWith(currentUser, selectedUserId.toLowerCase(), chatRef.id);
+
+  realChat(user.profilePic, user.name, chatRef.id, messagesSection);
+}
+
+export async function addToTalkedWith(currentUser, otherUser, chatId) {
+  const youTalkedWithRef = doc(
+    db,
+    "users",
+    currentUser,
+    "talkedWith",
+    otherUser
+  );
+  const heTalkedWithRef = doc(
+    db,
+    "users",
+    otherUser,
+    "talkedWith",
+    currentUser
+  );
+
+  await Promise.all([
+    setDoc(youTalkedWithRef, { chatId }),
+    setDoc(heTalkedWithRef, { chatId }),
+  ]);
 }
