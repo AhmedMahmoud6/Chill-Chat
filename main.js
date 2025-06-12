@@ -63,13 +63,6 @@ observeAuthState(async (user) => {
   if (!user) return;
 
   const userDisplayName = user.displayName.toLowerCase();
-  // currUserTalkedWith = await updateChatList(
-  //   userDisplayName,
-  //   allChatSection,
-  //   chatSectionEmpty,
-  //   userAuth,
-  //   loadingChatList
-  // );
 
   listenToTalkedWith(
     userDisplayName,
@@ -153,9 +146,12 @@ document.addEventListener("click", async (e) => {
     let currentSelectedUserId = friendRef.dataset.userid;
     let yourUserId = userAuth.currentUser.displayName.toLowerCase();
 
+    console.log("currUserTalkedWith", currUserTalkedWith);
     let selectedUser = currUserTalkedWith.find(
       (user) => user.name.toLowerCase() === currentSelectedUserId
     );
+
+    console.log("selectedUser", selectedUser);
 
     // create real chat
     realChat(
@@ -174,17 +170,6 @@ document.addEventListener("click", async (e) => {
     allMsgsArray.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
 
     setSenderId("");
-
-    // allMsgsArray.forEach((messageObj) => {
-    //   renderChatMsgs(
-    //     messageObj,
-    //     yourUserId,
-    //     userAuth,
-    //     chatStartingPoint,
-    //     selectedUser,
-    //     currentSelectedUserId
-    //   );
-    // });
 
     unsubscribeFromMessages = listenToNewMessages(
       currentChatId,
@@ -234,13 +219,6 @@ document.addEventListener("click", async (e) => {
   );
 
   if (msgListened) {
-    currUserTalkedWith = await updateChatList(
-      userAuth.currentUser.displayName.toLowerCase(),
-      allChatSection,
-      chatSectionEmpty,
-      loadingChatList
-    );
-
     const friendToClick = await waitForFriend(msgListened, "");
     if (friendToClick) {
       friendToClick.click();
