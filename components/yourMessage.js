@@ -1,4 +1,4 @@
-import { getTimeAgo } from "../functions.js";
+import { getTime as getTime } from "../functions.js";
 
 export function yourMessageContainer(yourPhoto, container) {
   let msgContainerHTML = `
@@ -38,7 +38,7 @@ export function firstYourMessage(yourMsg, sentTime, container) {
         <h3
             class="text-gray-400 text-xs font-normal leading-4 py-1"
         >
-            ${getTimeAgo(sentTime)}
+            ${getTime(sentTime)}
         </h3>
         </div>
     </div>
@@ -61,7 +61,7 @@ export function continuousYourMessage(yourMsg, sentTime, container) {
             <h3
             class="text-gray-400 text-xs font-normal leading-4 py-1"
             >
-            ${getTimeAgo(sentTime)}
+            ${getTime(sentTime)}
             </h3>
         </div>
         </div>

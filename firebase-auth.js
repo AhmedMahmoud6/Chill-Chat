@@ -82,6 +82,8 @@ export {
   where,
   orderBy,
   limit,
+  query,
+  onSnapshot,
   db,
   doc,
   setDoc,

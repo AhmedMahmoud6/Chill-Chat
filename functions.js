@@ -9,6 +9,9 @@ import {
   collection,
   updateDocument,
   serverTimestamp,
+  query,
+  orderBy,
+  onSnapshot,
 } from "./firebase-auth.js";
 import { realChat } from "./components/realChat.js";
 import { createFriendInChatList } from "./components/renderFriendChatList.js";
@@ -217,7 +220,7 @@ export async function handleFirstSendMessage(
 
   let startPoint = document.querySelector(".chat-start-point");
 
-  renderFirstMsg(user, startPoint, sentMessage, getTimeAgo(serverTimestamp()));
+  renderFirstMsg(user, startPoint, sentMessage, getTime(serverTimestamp()));
 
   return true;
 }
@@ -365,7 +368,7 @@ export function renderAllChatMsgs(
       yourMessageContainer(userAuth.currentUser.photoURL, chatStartingPoint);
       firstYourMessage(
         messageObj.content,
-        messageObj.timestamp,
+        messageObj.timestamp || "sending",
         document.querySelector(".your-msg-container")
       );
       setSenderId(yourUserId);
@@ -374,7 +377,7 @@ export function renderAllChatMsgs(
     else {
       continuousYourMessage(
         messageObj.content,
-        messageObj.timestamp,
+        messageObj.timestamp || "sending",
         document.querySelector(".your-msg-container")
       );
     }
@@ -394,7 +397,7 @@ export function renderAllChatMsgs(
       );
       firstFriendMessage(
         messageObj.content,
-        messageObj.timestamp,
+        messageObj.timestamp || "sending",
         document.querySelector(".friend-message-section")
       );
       setSenderId(currentSelectedUserId);
@@ -403,7 +406,7 @@ export function renderAllChatMsgs(
     else {
       continuousFriendMessage(
         messageObj.content,
-        messageObj.timestamp,
+        messageObj.timestamp || "sending",
         document.querySelector(".friend-message-section")
       );
     }
@@ -418,20 +421,58 @@ export function setSenderId(value) {
   sessionStorage.setItem("lastSenderId", JSON.stringify(value));
 }
 
-export function getTimeAgo(timestamp) {
-  const now = new Date();
-  const then = timestamp.toDate(); // Firebase Timestamp -> JS Date
-  const diff = now - then; // difference in milliseconds
+export function listenToNewMessages(
+  chatId,
+  renderSingleMessage,
+  yourUserId,
+  userAuth,
+  chatStartingPoint,
+  selectedUser,
+  currentSelectedUserId
+) {
+  const messagesRef = collection(db, "chats", chatId, "messages");
+  const q = query(messagesRef, orderBy("timestamp", "asc"));
 
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(diff / (1000 * 60));
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (["added", "modified"].includes(change.type)) {
+        const messageData = change.doc.data();
 
-  if (seconds < 60) return `${seconds} seconds ago`;
-  if (minutes < 60) return `${minutes} minutes ago`;
-  if (hours < 24) return `${hours} hours ago`;
-  if (days < 7) return `${days} days ago`;
+        if (!messageData.timestamp) return;
 
-  return then.toLocaleDateString(); // fallback to full date
+        const message = {
+          id: change.doc.id,
+          ...change.doc.data(),
+        };
+
+        console.log("message", message);
+
+        renderSingleMessage(
+          message,
+          yourUserId,
+          userAuth,
+          chatStartingPoint,
+          selectedUser,
+          currentSelectedUserId
+        );
+      }
+    });
+  });
+
+  return unsubscribe;
+}
+
+export function getTime(timestamp) {
+  const date = timestamp.toDate(); // Firebase Timestamp to JS Date
+
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+
+  const paddedMinutes = minutes < 10 ? "0" + minutes : minutes;
+
+  return `${hours}:${paddedMinutes} ${ampm}`;
 }

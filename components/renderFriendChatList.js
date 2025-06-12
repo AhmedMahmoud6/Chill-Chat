@@ -1,4 +1,4 @@
-import { getTimeAgo } from "../functions.js";
+import { getTime } from "../functions.js";
 
 export function createFriendInChatList(
   chatId,
@@ -28,7 +28,7 @@ export function createFriendInChatList(
             <p class="text-gray-400">${lastMessage}</p>
             </div>
             <div class="message-date">
-            <h1 class="text-white">${getTimeAgo(timestamp)}</h1>
+            <h1 class="text-white">${getTime(timestamp)}</h1>
             </div>
         </div>
     </div>

@@ -17,6 +17,7 @@ import {
   updateChatList,
   renderAllChatMsgs,
   setSenderId,
+  listenToNewMessages,
 } from "./functions.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
@@ -139,16 +140,26 @@ document.addEventListener("click", async (e) => {
 
     setSenderId("");
 
-    allMsgsArray.forEach((messageObj) => {
-      renderAllChatMsgs(
-        messageObj,
-        yourUserId,
-        userAuth,
-        chatStartingPoint,
-        selectedUser,
-        currentSelectedUserId
-      );
-    });
+    // allMsgsArray.forEach((messageObj) => {
+    //   renderAllChatMsgs(
+    //     messageObj,
+    //     yourUserId,
+    //     userAuth,
+    //     chatStartingPoint,
+    //     selectedUser,
+    //     currentSelectedUserId
+    //   );
+    // });
+
+    const unsubscribe = listenToNewMessages(
+      currentChatId,
+      renderAllChatMsgs,
+      yourUserId,
+      userAuth,
+      chatStartingPoint,
+      selectedUser,
+      currentSelectedUserId
+    );
 
     await setupMessageInputListeners(
       selectedUser,
