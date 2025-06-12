@@ -111,7 +111,12 @@ export async function setupMessageInputListeners(
       if (e.key === "Enter") {
         // new chat
         if (messagesSection.querySelector(".opened-chat")) {
-          renderFirstMsg(user, chatStartingPoint, sendMessageInput.value);
+          renderFirstMsg(
+            user,
+            chatStartingPoint,
+            sendMessageInput.value,
+            "sending"
+          );
           let msgHandled = await handleFirstSendMessage(
             sendMessageInput,
             selectedUserId,
@@ -138,7 +143,12 @@ export async function setupMessageInputListeners(
     sendCurrentMessageIcon.addEventListener("click", async () => {
       // new chat
       if (messagesSection.querySelector(".opened-chat")) {
-        renderFirstMsg(user, chatStartingPoint, sendMessageInput.value);
+        renderFirstMsg(
+          user,
+          chatStartingPoint,
+          sendMessageInput.value,
+          "sending"
+        );
         let msgHandled = await handleFirstSendMessage(
           sendMessageInput,
           selectedUserId,
@@ -172,7 +182,7 @@ export function renderFirstMsg(
   user,
   chatStartingPoint,
   sendMessageInput,
-  timestamp = ""
+  timestamp = "sending"
 ) {
   yourMessageContainer(user.profilePic, chatStartingPoint);
   firstYourMessage(
@@ -216,11 +226,11 @@ export async function handleFirstSendMessage(
 
   await addToTalkedWith(currentUser, selectedUserId.toLowerCase(), chatRef.id);
 
-  realChat(user.profilePic, user.name, chatRef.id, messagesSection);
+  // realChat(user.profilePic, user.name, chatRef.id, messagesSection);
 
-  let startPoint = document.querySelector(".chat-start-point");
+  // let startPoint = document.querySelector(".chat-start-point");
 
-  renderFirstMsg(user, startPoint, sentMessage, getTime(serverTimestamp()));
+  // renderFirstMsg(user, startPoint, sentMessage, "sent");
 
   return true;
 }
@@ -469,7 +479,23 @@ export function scrollToBottom() {
   }
 }
 
+export const waitForFriend = async () => {
+  return new Promise((resolve) => {
+    const interval = setInterval(() => {
+      const firstFriend = document.querySelector(".friend");
+      if (firstFriend) {
+        clearInterval(interval);
+        resolve(firstFriend);
+      }
+    }, 50);
+
+    // Optional: stop after 1s
+    setTimeout(() => clearInterval(interval), 1000);
+  });
+};
+
 export function getTime(timestamp) {
+  console.log(timestamp);
   const date = timestamp.toDate(); // Firebase Timestamp to JS Date
 
   let hours = date.getHours();

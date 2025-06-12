@@ -10,6 +10,7 @@ import {
   getDoc,
   getDocs,
   collection,
+  serverTimestamp,
 } from "./firebase-auth.js";
 
 import {
@@ -19,6 +20,7 @@ import {
   setSenderId,
   listenToNewMessages,
   scrollToBottom,
+  waitForFriend,
 } from "./functions.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
@@ -198,7 +200,7 @@ document.addEventListener("click", async (e) => {
     chatSectionEmpty,
     loadingChatList,
     chatStartingPoint,
-    ""
+    serverTimestamp()
   );
 
   if (msgListened) {
@@ -209,5 +211,10 @@ document.addEventListener("click", async (e) => {
       userAuth,
       loadingChatList
     );
+
+    const friendToClick = await waitForFriend();
+    if (friendToClick) {
+      friendToClick.click();
+    }
   }
 });

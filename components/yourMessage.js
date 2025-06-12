@@ -38,7 +38,13 @@ export function firstYourMessage(yourMsg, sentTime, container) {
         <h3
             class="text-gray-400 text-xs font-normal leading-4 py-1"
         >
-            ${getTime(sentTime)}
+            ${
+              sentTime === "sending"
+                ? "sending"
+                : sentTime === "sent"
+                ? "sent"
+                : getTime(sentTime)
+            }
         </h3>
         </div>
     </div>
@@ -61,7 +67,13 @@ export function continuousYourMessage(yourMsg, sentTime, container) {
             <h3
             class="text-gray-400 text-xs font-normal leading-4 py-1"
             >
-            ${getTime(sentTime)}
+            ${
+              sentTime === "sending"
+                ? "sending"
+                : sentTime === "sent"
+                ? "sent"
+                : getTime(sentTime)
+            }
             </h3>
         </div>
         </div>
