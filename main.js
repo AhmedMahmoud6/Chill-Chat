@@ -84,7 +84,9 @@ newChatSearch.addEventListener("input", async () => {
     filteredUsers = allUsers
       .filter(
         (username) =>
-          username.name?.toLowerCase().startsWith(newChatSearch.value) &&
+          username.name
+            ?.toLowerCase()
+            .startsWith(newChatSearch.value.toLowerCase()) &&
           username.name !== userAuth.currentUser.displayName
       )
       .map((username) => {
