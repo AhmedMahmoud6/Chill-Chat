@@ -129,7 +129,9 @@ export async function setupMessageInputListeners(
           );
 
           if (msgHandled) {
-            resolve(true);
+            resolve(
+              messagesSection.querySelector(".opened-chat").dataset.userid
+            );
             return true;
           }
         }
@@ -161,7 +163,7 @@ export async function setupMessageInputListeners(
         );
 
         if (msgHandled) {
-          resolve(true);
+          resolve(messagesSection.querySelector(".opened-chat").dataset.userid);
           return true;
         }
       }
@@ -359,7 +361,7 @@ export async function updateChatList(
   }
 }
 
-export function renderAllChatMsgs(
+export function renderChatMsg(
   messageObj,
   yourUserId,
   userAuth,
@@ -479,10 +481,12 @@ export function scrollToBottom() {
   }
 }
 
-export const waitForFriend = async () => {
+export const waitForFriend = async (userid) => {
   return new Promise((resolve) => {
     const interval = setInterval(() => {
-      const firstFriend = document.querySelector(".friend");
+      const firstFriend = document.querySelector(
+        `.friend[data-userid="${userid.toLowerCase()}"]`
+      );
       if (firstFriend) {
         clearInterval(interval);
         resolve(firstFriend);
@@ -495,7 +499,6 @@ export const waitForFriend = async () => {
 };
 
 export function getTime(timestamp) {
-  console.log(timestamp);
   const date = timestamp.toDate(); // Firebase Timestamp to JS Date
 
   let hours = date.getHours();

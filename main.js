@@ -16,7 +16,7 @@ import {
 import {
   setupMessageInputListeners,
   updateChatList,
-  renderAllChatMsgs,
+  renderChatMsg,
   setSenderId,
   listenToNewMessages,
   scrollToBottom,
@@ -49,6 +49,7 @@ let noUsersFound = document.querySelector(".no-users");
 let loadingChatList = document.querySelector(".loading-chat-list");
 let chatStartingPoint;
 
+let unsubscribeFromMessages = null;
 let userAuth = auth;
 let allUsers;
 let filteredUsers;
@@ -119,6 +120,7 @@ document.addEventListener("click", async (e) => {
   const friendRef = e.target.closest(".friend");
   // if clicked on friend in the chatlist
   if (friendRef) {
+    if (unsubscribeFromMessages) unsubscribeFromMessages();
     let currentChatId = friendRef.dataset.chatid;
     let currentSelectedUserId = friendRef.dataset.userid;
     let yourUserId = userAuth.currentUser.displayName.toLowerCase();
@@ -146,7 +148,7 @@ document.addEventListener("click", async (e) => {
     setSenderId("");
 
     // allMsgsArray.forEach((messageObj) => {
-    //   renderAllChatMsgs(
+    //   renderChatMsgs(
     //     messageObj,
     //     yourUserId,
     //     userAuth,
@@ -156,9 +158,9 @@ document.addEventListener("click", async (e) => {
     //   );
     // });
 
-    const unsubscribe = listenToNewMessages(
+    unsubscribeFromMessages = listenToNewMessages(
       currentChatId,
-      renderAllChatMsgs,
+      renderChatMsg,
       yourUserId,
       userAuth,
       chatStartingPoint,
@@ -212,7 +214,7 @@ document.addEventListener("click", async (e) => {
       loadingChatList
     );
 
-    const friendToClick = await waitForFriend();
+    const friendToClick = await waitForFriend(msgListened);
     if (friendToClick) {
       friendToClick.click();
     }
