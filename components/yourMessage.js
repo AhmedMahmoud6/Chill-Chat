@@ -49,7 +49,7 @@ export function firstYourMessage(yourMsg, sentTime, container) {
 export function continuousYourMessage(yourMsg, sentTime, container) {
   let msgContainerHTML = `
     <div class="justify-center">
-        <div class="w-max max-w-xs xl:max-w-md grid ml-auto">
+        <div class="w-max max-w-xs xl:max-w-md grid ml-auto mb-4">
         <div class="px-3 py-2 bg-[#6366f1] relative rounded">
             <h2
             class="text-white text-sm font-normal leading-snug"

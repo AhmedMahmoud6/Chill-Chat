@@ -18,6 +18,7 @@ import {
   renderAllChatMsgs,
   setSenderId,
   listenToNewMessages,
+  scrollToBottom,
 } from "./functions.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";

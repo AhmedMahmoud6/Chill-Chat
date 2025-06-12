@@ -445,8 +445,6 @@ export function listenToNewMessages(
           ...change.doc.data(),
         };
 
-        console.log("message", message);
-
         renderSingleMessage(
           message,
           yourUserId,
@@ -455,11 +453,20 @@ export function listenToNewMessages(
           selectedUser,
           currentSelectedUserId
         );
+
+        scrollToBottom();
       }
     });
   });
 
   return unsubscribe;
+}
+
+export function scrollToBottom() {
+  const messagesContainer = document.querySelector(".chat");
+  if (messagesContainer) {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
 }
 
 export function getTime(timestamp) {
