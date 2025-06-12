@@ -12,6 +12,7 @@ import {
   query,
   orderBy,
   onSnapshot,
+  where,
 } from "./firebase-auth.js";
 import { realChat } from "./components/realChat.js";
 import { createFriendInChatList } from "./components/renderFriendChatList.js";
@@ -299,7 +300,6 @@ export async function updateChatList(
   userDisplayName,
   allChatSection,
   chatSectionEmpty,
-  userAuth,
   loadingChatList
 ) {
   const talkedWithUsers = await subcollectionExists(
@@ -314,16 +314,12 @@ export async function updateChatList(
     chatSectionEmpty.classList.remove("hidden");
     loadingChatList.classList.add("hidden");
   } else {
+    allChatSection.innerHTML = "";
     chatSectionEmpty.classList.add("hidden");
     allChatSection.classList.remove("hidden");
 
     const allTalkedWith = await getDocs(
-      collection(
-        db,
-        "users",
-        userAuth.currentUser.displayName.toLowerCase(),
-        "talkedWith"
-      )
+      collection(db, "users", userDisplayName.toLowerCase(), "talkedWith")
     );
 
     let allTalkedWithArray = [];
@@ -474,6 +470,60 @@ export function listenToNewMessages(
   return unsubscribe;
 }
 
+export function listenToTalkedWith(
+  yourUserId,
+  allChatSection,
+  chatSectionEmpty,
+  loadingChatList,
+  onUpdate
+) {
+  const talkedWithRef = collection(db, "users", yourUserId, "talkedWith");
+  const q = query(talkedWithRef);
+
+  const unsubscribe = onSnapshot(q, async () => {
+    const talkedWithUsers = await updateChatList(
+      yourUserId,
+      allChatSection,
+      chatSectionEmpty,
+      loadingChatList
+    );
+
+    onUpdate(talkedWithUsers);
+  });
+
+  return unsubscribe;
+}
+
+export function listenToLastMsg(yourUserId, updateUi) {
+  const chatsRef = collection(db, "chats");
+  const q = query(
+    chatsRef,
+    where("participants", "array-contains", yourUserId)
+  );
+
+  const unsubscribe = onSnapshot(q, async (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (["added", "modified"].includes(change.type)) {
+        const chat = change.doc.data();
+
+        if (!chat.lastMessage.timestamp) return;
+
+        const chatId = change.doc.id;
+
+        if (chat.lastMessage) {
+          const updateDetails = {
+            chatId,
+            ...chat.lastMessage,
+          };
+          updateUi(updateDetails);
+        }
+      }
+    });
+  });
+
+  return unsubscribe;
+}
+
 export function scrollToBottom() {
   const messagesContainer = document.querySelector(".chat");
   if (messagesContainer) {
@@ -481,20 +531,31 @@ export function scrollToBottom() {
   }
 }
 
-export const waitForFriend = async (userid) => {
+export const waitForFriend = async (userid, chatid) => {
   return new Promise((resolve) => {
     const interval = setInterval(() => {
-      const firstFriend = document.querySelector(
+      const firstFriendUserId = document.querySelector(
         `.friend[data-userid="${userid.toLowerCase()}"]`
       );
-      if (firstFriend) {
+      const firstFriendChatId = document.querySelector(
+        `.friend[data-chatid="${chatid}"]`
+      );
+
+      if (firstFriendUserId) {
         clearInterval(interval);
-        resolve(firstFriend);
+        resolve(firstFriendUserId);
       }
-    }, 50);
+      if (firstFriendChatId) {
+        clearInterval(interval);
+        resolve(firstFriendChatId);
+      }
+    }, 100);
 
     // Optional: stop after 1s
-    setTimeout(() => clearInterval(interval), 1000);
+    setTimeout(() => {
+      clearInterval(interval);
+      resolve(null);
+    }, 2000);
   });
 };
 

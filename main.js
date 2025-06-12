@@ -21,6 +21,9 @@ import {
   listenToNewMessages,
   scrollToBottom,
   waitForFriend,
+  listenToTalkedWith,
+  listenToLastMsg,
+  getTime,
 } from "./functions.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
@@ -60,13 +63,38 @@ observeAuthState(async (user) => {
   if (!user) return;
 
   const userDisplayName = user.displayName.toLowerCase();
-  currUserTalkedWith = await updateChatList(
+  // currUserTalkedWith = await updateChatList(
+  //   userDisplayName,
+  //   allChatSection,
+  //   chatSectionEmpty,
+  //   userAuth,
+  //   loadingChatList
+  // );
+
+  listenToTalkedWith(
     userDisplayName,
     allChatSection,
     chatSectionEmpty,
-    userAuth,
-    loadingChatList
+    loadingChatList,
+    (updatedUsers) => {
+      currUserTalkedWith = updatedUsers;
+    }
   );
+  // paused here
+  listenToLastMsg(userDisplayName, async (updatedDetails) => {
+    let waiting = await waitForFriend("", updatedDetails.chatId);
+
+    if (waiting) {
+      let selectUpdatedFriend = document.querySelector(
+        `.friend[data-chatid="${updatedDetails.chatId}"]`
+      );
+      let FriendLastMsg = selectUpdatedFriend.querySelector("p");
+      let FriendLastMsgTime =
+        selectUpdatedFriend.querySelector(".message-date h1");
+      FriendLastMsg.textContent = updatedDetails.content;
+      FriendLastMsgTime.textContent = getTime(updatedDetails.timestamp);
+    }
+  });
   newChat.classList.remove("hidden");
 });
 
@@ -210,11 +238,10 @@ document.addEventListener("click", async (e) => {
       userAuth.currentUser.displayName.toLowerCase(),
       allChatSection,
       chatSectionEmpty,
-      userAuth,
       loadingChatList
     );
 
-    const friendToClick = await waitForFriend(msgListened);
+    const friendToClick = await waitForFriend(msgListened, "");
     if (friendToClick) {
       friendToClick.click();
     }
