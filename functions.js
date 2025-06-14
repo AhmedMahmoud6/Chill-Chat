@@ -133,9 +133,10 @@ export async function setupMessageInputListeners(
         }
       }
     });
-
+    console.log(sendCurrentMessageIcon);
     sendCurrentMessageIcon.addEventListener("click", async () => {
-      if (!sendMessageInput.value.trim() !== "") return;
+      if (sendMessageInput.value.trim() === "") return;
+      const sentMsg = sendMessageInput.value;
       // new chat
       if (messagesSection.querySelector(".opened-chat")) {
         renderFirstMsg(
