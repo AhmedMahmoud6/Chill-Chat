@@ -19,6 +19,8 @@ let passwordError = document.querySelector(".pass-sign-in-error");
 let signInBtn = document.querySelector(".sign-in");
 let signInValidationMsg = document.querySelector(".sign-in-validation");
 
+observeAuthState((user) => (user ? window.location.replace("main.html") : ""));
+
 signInBtn.addEventListener("click", async () => {
   if (
     // validate email address

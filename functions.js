@@ -493,7 +493,9 @@ export function listenToNewMessages(
         setSenderId(message.sentFrom);
       }
 
-      scrollToBottom();
+      setTimeout(() => {
+        scrollToBottom();
+      }, 1);
     });
 
     isFirstLoad = false;
