@@ -372,9 +372,6 @@ export function renderChatMsg(
   }
   // if the message is not sent by you
   else {
-    console.log(getSenderId());
-    console.log(currentSelectedUserId);
-    console.log(getSenderId() !== currentSelectedUserId);
     if (document.querySelector(".your-msg-container"))
       document
         .querySelector(".your-msg-container")
