@@ -121,12 +121,7 @@ export async function setupMessageInputListeners(
           let msgHandled = await handleFirstSendMessage(
             sendMessageInput,
             selectedUserId,
-            user,
-            userAuth,
-            messagesSection,
-            allChatSection,
-            chatSectionEmpty,
-            loadingChatList
+            userAuth
           );
 
           if (msgHandled) {
@@ -155,12 +150,7 @@ export async function setupMessageInputListeners(
         let msgHandled = await handleFirstSendMessage(
           sendMessageInput,
           selectedUserId,
-          user,
-          userAuth,
-          messagesSection,
-          allChatSection,
-          chatSectionEmpty,
-          loadingChatList
+          userAuth
         );
 
         if (msgHandled) {
@@ -198,9 +188,7 @@ export function renderFirstMsg(
 export async function handleFirstSendMessage(
   inputEl,
   selectedUserId,
-  user,
-  userAuth,
-  messagesSection
+  userAuth
 ) {
   const sentMessage = inputEl.value.trim();
   if (!sentMessage) return;

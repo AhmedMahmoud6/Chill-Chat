@@ -71,9 +71,12 @@ observeAuthState(async (user) => {
     loadingChatList,
     (updatedUsers) => {
       currUserTalkedWith = updatedUsers;
+      setTimeout(() => {
+        newChat.classList.remove("hidden");
+      }, 500);
     }
   );
-  // paused here
+
   listenToLastMsg(userDisplayName, async (updatedDetails) => {
     let waiting = await waitForFriend("", updatedDetails.chatId);
 
@@ -88,7 +91,6 @@ observeAuthState(async (user) => {
       FriendLastMsgTime.textContent = getTime(updatedDetails.timestamp);
     }
   });
-  newChat.classList.remove("hidden");
 });
 
 // open search users
@@ -105,13 +107,17 @@ newChatSearch.addEventListener("input", async () => {
   noUsersFound.classList.add("hidden");
   if (newChatSearch.value !== "") {
     foundedUsersDiv.innerHTML = "";
+
+    let cannotTalkWith = currUserTalkedWith.map((user) => user.name);
+
     filteredUsers = allUsers
       .filter(
         (username) =>
           username.name
             ?.toLowerCase()
             .startsWith(newChatSearch.value.toLowerCase()) &&
-          username.name !== userAuth.currentUser.displayName
+          username.name !== userAuth.currentUser.displayName &&
+          !cannotTalkWith.includes(username.name)
       )
       .map((username) => {
         return {
