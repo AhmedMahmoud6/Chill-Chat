@@ -50,6 +50,8 @@ let newChatSearch = document.querySelector(".new-chat-search");
 let foundedUsersDiv = document.querySelector(".founded-users");
 let noUsersFound = document.querySelector(".no-users");
 let loadingChatList = document.querySelector(".loading-chat-list");
+let chatsSection = document.querySelector(".chats-section");
+let sideSection = document.querySelector(".side-section");
 let chatStartingPoint;
 
 let unsubscribeFromMessages = null;
@@ -173,6 +175,33 @@ document.addEventListener("click", async (e) => {
     allMsgsArray.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
 
     setSenderId("");
+
+    let backBtn = document.querySelector(".back");
+    if (window.innerWidth <= 875) {
+      chatsSection.classList.replace(
+        "translate-x-[0vw]",
+        "translate-x-[-130vw]"
+      );
+      sideSection.classList.replace(
+        "translate-x-[0vw]",
+        "translate-x-[-130vw]"
+      );
+
+      if (backBtn) {
+        backBtn.classList.remove("hidden");
+      }
+
+      backBtn.addEventListener("click", () => {
+        chatsSection.classList.replace(
+          "translate-x-[-130vw]",
+          "translate-x-[0vw]"
+        );
+        sideSection.classList.replace(
+          "translate-x-[-130vw]",
+          "translate-x-[0vw]"
+        );
+      });
+    }
 
     unsubscribeFromMessages = listenToNewMessages(
       currentChatId,

@@ -32,7 +32,7 @@ export function firstFriendMessage(friendMsg, sentTime, container) {
     class="first-msg w-max max-w-xs lg:max-w-sm xl:max-w-md grid"
     >
         <div
-            class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex w-max"
+            class="max-w-[320px] max-[410px]:max-w-[200px] break-words px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex w-max"
         >
             <h5
             class="text-white text-sm font-normal leading-snug"
@@ -60,7 +60,7 @@ export function continuousFriendMessage(friendMsg, sentTime, container) {
         class="continuous-msg w-max max-w-xs lg:max-w-sm xl:max-w-md grid"
         >
         <div
-            class="px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
+            class="max-w-[320px] max-[410px]:max-w-[200px] break-words px-3.5 py-2 bg-[#5d5d61] relative rounded justify-start items-center gap-3 inline-flex"
         >
             <h5
             class="text-white text-sm font-normal leading-snug"

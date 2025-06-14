@@ -9,6 +9,7 @@ export function tempChat(userImg, username, userid, messagesSection) {
               class="contact-info relative bg-[#49494c] w-full h-16 flex justify-between items-center px-8"
             >
               <div class="contact-title flex gap-4 items-center">
+              <button class="back w-11 h-11 flex justify-center items-center bg-gray-400/0 cursor-pointer focus:bg-gray-400/50 rounded-lg text-2xl text-white"><i class="fa-solid fa-left-long"></i></button>
                 <div class="contact-img w-[45px] h-[45px] flex-shrink-0">
                   <img
                     class="w-full h-full rounded-full object-cover"
@@ -23,7 +24,7 @@ export function tempChat(userImg, username, userid, messagesSection) {
               </div>
             </div>
 
-            <div class="chat flex-1 p-8 relative overflow-y-auto">
+            <div class="chat flex-1 p-8 max-[500px]:p-3 relative overflow-y-auto">
             <div class="chat-start-point w-full"></div>
             </div>
 

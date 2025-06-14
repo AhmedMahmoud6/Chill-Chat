@@ -31,7 +31,7 @@ export function firstYourMessage(yourMsg, sentTime, container) {
         >
         You
         </h5>
-        <div class="px-3 py-2 bg-[#6366f1] relative rounded ml-auto">
+        <div class="max-w-[320px] max-[410px]:max-w-[200px] break-words px-3 py-2 bg-[#6366f1] relative rounded ml-auto">
         <h2 class="text-white text-sm font-normal leading-snug">
             ${yourMsg}
         </h2>
@@ -58,7 +58,7 @@ export function continuousYourMessage(yourMsg, sentTime, container) {
   let msgContainerHTML = `
     <div class="justify-center ${sentTime === "sending" ? "dummy" : ""}">
         <div class="w-max max-w-xs xl:max-w-md grid ml-auto mb-4">
-        <div class="px-3 py-2 bg-[#6366f1] relative rounded">
+        <div class="max-w-[320px] max-[410px]:max-w-[200px] break-words px-3 py-2 bg-[#6366f1] relative rounded">
             <h2
             class="text-white text-sm font-normal leading-snug"
             >

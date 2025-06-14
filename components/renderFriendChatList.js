@@ -21,14 +21,14 @@ export function createFriendInChatList(
             />
         </div>
         <div
-            class="info w-full flex justify-between items-center py-2 border-b-1 border-[#49494c]"
+            class="info flex-1 w-full flex justify-between items-center py-2 border-b-1 border-[#49494c] min-w-0"
         >
-            <div class="name-and-message">
-            <h1 class="text-white">${username}</h1>
-            <p class="text-gray-400">${lastMessage}</p>
+            <div class="name-and-message flex flex-col overflow-hidden">
+            <h1 class="text-white truncate max-w-full  text-base">${username}</h1>
+            <p class="text-gray-400 truncate max-w-full text-sm">${lastMessage}</p>
             </div>
-            <div class="message-date">
-            <h1 class="text-white">${getTime(timestamp)}</h1>
+            <div class="message-date flex-shrink-0 pl-2 text-white  sm:text-sm">
+            <h1>${getTime(timestamp)}</h1>
             </div>
         </div>
     </div>
