@@ -378,6 +378,7 @@ export function renderChatMsg(
         .classList.remove("your-msg-container");
     // if the last user who sent the message is you
     if (getSenderId() !== currentSelectedUserId) {
+      console.log("sad");
       friendMessageContainer(
         selectedUser.profilePic,
         selectedUser.name,
@@ -443,6 +444,7 @@ export function setSenderId(value) {
   sessionStorage.setItem("lastSenderId", JSON.stringify(value));
 }
 
+// paused here
 export function listenToNewMessages(
   chatId,
   renderSingleMessage,
@@ -463,7 +465,7 @@ export function listenToNewMessages(
         if (!messageData.timestamp) return;
 
         if (document.querySelector(".dummy"))
-          document.querySelector(".dummy").closest(".pb-4").remove();
+          document.querySelector(".dummy").remove();
 
         const message = {
           id: change.doc.id,

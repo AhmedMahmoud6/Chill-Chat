@@ -56,7 +56,7 @@ export function firstYourMessage(yourMsg, sentTime, container) {
 
 export function continuousYourMessage(yourMsg, sentTime, container) {
   let msgContainerHTML = `
-    <div class="justify-center">
+    <div class="justify-center ${sentTime === "sending" ? "dummy" : ""}">
         <div class="w-max max-w-xs xl:max-w-md grid ml-auto mb-4">
         <div class="px-3 py-2 bg-[#6366f1] relative rounded">
             <h2

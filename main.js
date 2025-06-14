@@ -63,6 +63,7 @@ observeAuthState(async (user) => {
   if (!user) return;
 
   const userDisplayName = user.displayName.toLowerCase();
+  setSenderId("");
 
   listenToTalkedWith(
     userDisplayName,
