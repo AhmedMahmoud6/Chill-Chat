@@ -108,7 +108,6 @@ newChatSearch.addEventListener("input", async () => {
   if (newChatSearch.value !== "") {
     foundedUsersDiv.innerHTML = "";
 
-    console.log(currUserTalkedWith);
     let cannotTalkWith = currUserTalkedWith.map((user) => user.name);
 
     filteredUsers = allUsers
