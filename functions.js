@@ -367,10 +367,14 @@ export function renderChatMsg(
         messageObj.timestamp || "sending",
         document.querySelector(".your-msg-container")
       );
+      setSenderId(yourUserId);
     }
   }
   // if the message is not sent by you
   else {
+    console.log(getSenderId());
+    console.log(currentSelectedUserId);
+    console.log(getSenderId() !== currentSelectedUserId);
     if (document.querySelector(".your-msg-container"))
       document
         .querySelector(".your-msg-container")
@@ -396,6 +400,7 @@ export function renderChatMsg(
         messageObj.timestamp || "sending",
         document.querySelector(".friend-message-section")
       );
+      setSenderId(currentSelectedUserId);
     }
   }
 }
@@ -479,7 +484,6 @@ export function listenToNewMessages(
           currentSelectedUserId
         );
       } else {
-        setSenderId(message.sentFrom);
         renderSingleMessage(
           message,
           yourUserId,
@@ -488,6 +492,8 @@ export function listenToNewMessages(
           selectedUser,
           currentSelectedUserId
         );
+
+        setSenderId(message.sentFrom);
       }
 
       scrollToBottom();
