@@ -55,15 +55,6 @@ export function checkPasswordLength(password) {
   }
 }
 
-// export function formattedTimestamp() {
-//   const now = new Date();
-//   const formattedTimestamp = now.toLocaleString("en-US", {
-//     dateStyle: "long", // "June 11, 2025"
-//     timeStyle: "short", // "2:23 PM"
-//   });
-//   return formattedTimestamp;
-// }
-
 export function validateFields(
   isValidField,
   fieldName,
@@ -106,7 +97,7 @@ export async function setupMessageInputListeners(
 
   return new Promise((resolve) => {
     sendMessageInput.addEventListener("keydown", async (e) => {
-      if (e.key === "Enter") {
+      if (e.key === "Enter" && sendMessageInput.value.trim() !== "") {
         const sentMsg = sendMessageInput.value;
         // new chat
         if (messagesSection.querySelector(".opened-chat")) {
@@ -137,6 +128,7 @@ export async function setupMessageInputListeners(
             userAuth,
             chatStartingPoint
           );
+          scrollToBottom();
           await handleContinuousSendMessage(sendMessageInput, userAuth, chatId);
           resolve(true);
         }
@@ -144,6 +136,7 @@ export async function setupMessageInputListeners(
     });
 
     sendCurrentMessageIcon.addEventListener("click", async () => {
+      if (!sendMessageInput.value.trim() !== "") return;
       // new chat
       if (messagesSection.querySelector(".opened-chat")) {
         renderFirstMsg(
@@ -165,7 +158,15 @@ export async function setupMessageInputListeners(
       }
       // existing chat
       else {
+        renderDummyChatMsg(
+          sentMsg,
+          userAuth.currentUser.displayName.toLowerCase(),
+          userAuth,
+          chatStartingPoint
+        );
+        scrollToBottom();
         await handleContinuousSendMessage(sendMessageInput, userAuth, chatId);
+        resolve(true);
       }
     });
   });
@@ -344,6 +345,7 @@ export function renderChatMsg(
   selectedUser,
   currentSelectedUserId
 ) {
+  console.log(messageObj);
   // if the message sent by you
   if (messageObj.sentFrom === yourUserId) {
     if (document.querySelector(".friend-message-section"))
@@ -352,6 +354,8 @@ export function renderChatMsg(
         .classList.remove("friend-message-section");
     // if the last user who sent the message is not you (starting from the first of the messages)
     if (getSenderId() !== yourUserId) {
+      if (document.querySelector(".dummy"))
+        document.querySelector(".dummy").closest(".pb-4").remove();
       yourMessageContainer(userAuth.currentUser.photoURL, chatStartingPoint);
       firstYourMessage(
         messageObj.content,
@@ -362,6 +366,9 @@ export function renderChatMsg(
     }
     // if the last user who sent the message is sent by you
     else {
+      if (document.querySelector(".dummy"))
+        document.querySelector(".dummy").remove();
+      console.log("continuos");
       continuousYourMessage(
         messageObj.content,
         messageObj.timestamp || "sending",
@@ -408,6 +415,7 @@ export function renderDummyChatMsg(
   userAuth,
   chatStartingPoint
 ) {
+  let realSender = getSenderId();
   // if the message sent by you
   if (yourUserId) {
     if (document.querySelector(".friend-message-section"))
@@ -434,6 +442,8 @@ export function renderDummyChatMsg(
       );
     }
   }
+
+  setSenderId(realSender);
 }
 
 export function getSenderId() {
@@ -463,14 +473,11 @@ export function listenToNewMessages(
 
       if (!messageData.timestamp) return;
 
-      if (document.querySelector(".dummy"))
-        document.querySelector(".dummy").remove();
-
       const message = {
         id: change.doc.id,
         ...change.doc.data(),
       };
-
+      console.log("listener");
       if (isFirstLoad) {
         renderSingleMessage(
           message,

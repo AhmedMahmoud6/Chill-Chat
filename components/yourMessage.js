@@ -22,6 +22,7 @@ export function yourMessageContainer(yourPhoto, container) {
 }
 
 export function firstYourMessage(yourMsg, sentTime, container) {
+  console.log(yourMsg, sentTime, container);
   let msgContainerHTML = `
     <div class="${
       sentTime === "sending" ? "dummy" : ""
@@ -55,6 +56,7 @@ export function firstYourMessage(yourMsg, sentTime, container) {
 }
 
 export function continuousYourMessage(yourMsg, sentTime, container) {
+  console.log("my continious msg");
   let msgContainerHTML = `
     <div class="justify-center ${sentTime === "sending" ? "dummy" : ""}">
         <div class="w-max max-w-xs xl:max-w-md grid ml-auto mb-4">
