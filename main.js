@@ -166,6 +166,7 @@ document.addEventListener("click", async (e) => {
       currentChatId,
       messagesSection
     );
+    document.querySelector(".send-message-input").focus();
 
     // update the chatStartingPoint
     chatStartingPoint = document.querySelector(".chat-start-point");
@@ -210,6 +211,7 @@ document.addEventListener("click", async (e) => {
   newChatContainer.classList.add("hidden");
 
   tempChat(user.profilePic, user.name, selectedUserId, messagesSection);
+  document.querySelector(".send-message-input").focus();
 
   triggerChatMobileView(chatsSection, sideSection);
   chatStartingPoint = document.querySelector(".chat-start-point");

@@ -345,7 +345,6 @@ export function renderChatMsg(
   selectedUser,
   currentSelectedUserId
 ) {
-  console.log(messageObj);
   // if the message sent by you
   if (messageObj.sentFrom === yourUserId) {
     if (document.querySelector(".friend-message-section"))
@@ -368,7 +367,6 @@ export function renderChatMsg(
     else {
       if (document.querySelector(".dummy"))
         document.querySelector(".dummy").remove();
-      console.log("continuos");
       continuousYourMessage(
         messageObj.content,
         messageObj.timestamp || "sending",
@@ -477,7 +475,6 @@ export function listenToNewMessages(
         id: change.doc.id,
         ...change.doc.data(),
       };
-      console.log("listener");
       if (isFirstLoad) {
         renderSingleMessage(
           message,
