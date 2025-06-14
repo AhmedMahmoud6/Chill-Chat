@@ -14,7 +14,6 @@ import {
   onSnapshot,
   where,
 } from "./firebase-auth.js";
-import { realChat } from "./components/realChat.js";
 import { createFriendInChatList } from "./components/renderFriendChatList.js";
 import {
   friendMessageContainer,

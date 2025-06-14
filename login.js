@@ -9,7 +9,6 @@ import {
   signInWithEmail,
   getFriendlyErrorMessage,
   observeAuthState,
-  logoutUser,
 } from "./firebase-auth.js";
 
 let email = document.querySelector(".email-sign-in");

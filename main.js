@@ -1,13 +1,8 @@
 import {
-  getCollectionRef,
   auth,
   observeAuthState,
   getAllUserNames,
-  createDoc,
-  setDoc,
-  doc,
   db,
-  getDoc,
   getDocs,
   collection,
   serverTimestamp,
@@ -15,11 +10,9 @@ import {
 
 import {
   setupMessageInputListeners,
-  updateChatList,
   renderChatMsg,
   setSenderId,
   listenToNewMessages,
-  scrollToBottom,
   waitForFriend,
   listenToTalkedWith,
   listenToLastMsg,
@@ -30,17 +23,6 @@ import {
 import { displayFoundedUsers } from "./components/newChat.js";
 import { realChat } from "./components/realChat.js";
 import { tempChat } from "./components/tempChat.js";
-import { createFriendInChatList } from "./components/renderFriendChatList.js";
-import {
-  yourMessageContainer,
-  firstYourMessage,
-  continuousYourMessage,
-} from "./components/yourMessage.js";
-import {
-  friendMessageContainer,
-  firstFriendMessage,
-  continuousFriendMessage,
-} from "./components/friendMessage.js";
 
 let messagesSection = document.querySelector(".messages-section");
 let chatSectionEmpty = document.querySelector(".section-chat-empty");
