@@ -600,6 +600,29 @@ export const waitForFriend = async (userid, chatid) => {
   });
 };
 
+export function triggerChatMobileView(chatsSection, sideSection) {
+  let backBtn = document.querySelector(".back");
+  if (window.innerWidth <= 875) {
+    chatsSection.classList.replace("translate-x-[0vw]", "translate-x-[-130vw]");
+    sideSection.classList.replace("translate-x-[0vw]", "translate-x-[-130vw]");
+
+    if (backBtn) {
+      backBtn.classList.remove("hidden");
+    }
+
+    backBtn.addEventListener("click", () => {
+      chatsSection.classList.replace(
+        "translate-x-[-130vw]",
+        "translate-x-[0vw]"
+      );
+      sideSection.classList.replace(
+        "translate-x-[-130vw]",
+        "translate-x-[0vw]"
+      );
+    });
+  }
+}
+
 export function getTime(timestamp) {
   const date = timestamp.toDate(); // Firebase Timestamp to JS Date
 

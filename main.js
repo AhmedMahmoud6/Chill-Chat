@@ -24,6 +24,7 @@ import {
   listenToTalkedWith,
   listenToLastMsg,
   getTime,
+  triggerChatMobileView,
 } from "./functions.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
@@ -176,32 +177,7 @@ document.addEventListener("click", async (e) => {
 
     setSenderId("");
 
-    let backBtn = document.querySelector(".back");
-    if (window.innerWidth <= 875) {
-      chatsSection.classList.replace(
-        "translate-x-[0vw]",
-        "translate-x-[-130vw]"
-      );
-      sideSection.classList.replace(
-        "translate-x-[0vw]",
-        "translate-x-[-130vw]"
-      );
-
-      if (backBtn) {
-        backBtn.classList.remove("hidden");
-      }
-
-      backBtn.addEventListener("click", () => {
-        chatsSection.classList.replace(
-          "translate-x-[-130vw]",
-          "translate-x-[0vw]"
-        );
-        sideSection.classList.replace(
-          "translate-x-[-130vw]",
-          "translate-x-[0vw]"
-        );
-      });
-    }
+    triggerChatMobileView(chatsSection, sideSection);
 
     unsubscribeFromMessages = listenToNewMessages(
       currentChatId,
@@ -234,6 +210,8 @@ document.addEventListener("click", async (e) => {
   newChatContainer.classList.add("hidden");
 
   tempChat(user.profilePic, user.name, selectedUserId, messagesSection);
+
+  triggerChatMobileView(chatsSection, sideSection);
   chatStartingPoint = document.querySelector(".chat-start-point");
   let msgListened = await setupMessageInputListeners(
     user,
