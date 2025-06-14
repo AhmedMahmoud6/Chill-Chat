@@ -131,7 +131,6 @@ export async function setupMessageInputListeners(
         }
         // existing chat
         else {
-          console.log(sentMsg);
           renderDummyChatMsg(
             sentMsg,
             userAuth.currentUser.displayName.toLowerCase(),
@@ -378,7 +377,6 @@ export function renderChatMsg(
         .classList.remove("your-msg-container");
     // if the last user who sent the message is you
     if (getSenderId() !== currentSelectedUserId) {
-      console.log("sad");
       friendMessageContainer(
         selectedUser.profilePic,
         selectedUser.name,
@@ -444,7 +442,6 @@ export function setSenderId(value) {
   sessionStorage.setItem("lastSenderId", JSON.stringify(value));
 }
 
-// paused here
 export function listenToNewMessages(
   chatId,
   renderSingleMessage,
@@ -456,22 +453,23 @@ export function listenToNewMessages(
 ) {
   const messagesRef = collection(db, "chats", chatId, "messages");
   const q = query(messagesRef, orderBy("timestamp", "asc"));
+  let isFirstLoad = true;
 
   const unsubscribe = onSnapshot(q, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
-      if (["added", "modified"].includes(change.type)) {
-        const messageData = change.doc.data();
+      const messageData = change.doc.data();
 
-        if (!messageData.timestamp) return;
+      if (!messageData.timestamp) return;
 
-        if (document.querySelector(".dummy"))
-          document.querySelector(".dummy").remove();
+      if (document.querySelector(".dummy"))
+        document.querySelector(".dummy").remove();
 
-        const message = {
-          id: change.doc.id,
-          ...change.doc.data(),
-        };
+      const message = {
+        id: change.doc.id,
+        ...change.doc.data(),
+      };
 
+      if (isFirstLoad) {
         renderSingleMessage(
           message,
           yourUserId,
@@ -480,10 +478,22 @@ export function listenToNewMessages(
           selectedUser,
           currentSelectedUserId
         );
-
-        scrollToBottom();
+      } else {
+        setSenderId(message.sentFrom);
+        renderSingleMessage(
+          message,
+          yourUserId,
+          userAuth,
+          chatStartingPoint,
+          selectedUser,
+          currentSelectedUserId
+        );
       }
+
+      scrollToBottom();
     });
+
+    isFirstLoad = false;
   });
 
   return unsubscribe;
