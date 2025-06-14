@@ -88,9 +88,6 @@ export async function setupMessageInputListeners(
   selectedUserId,
   userAuth,
   messagesSection,
-  allChatSection,
-  chatSectionEmpty,
-  loadingChatList,
   chatStartingPoint,
   chatId
 ) {
@@ -110,6 +107,7 @@ export async function setupMessageInputListeners(
   return new Promise((resolve) => {
     sendMessageInput.addEventListener("keydown", async (e) => {
       if (e.key === "Enter") {
+        const sentMsg = sendMessageInput.value;
         // new chat
         if (messagesSection.querySelector(".opened-chat")) {
           renderFirstMsg(
@@ -133,7 +131,15 @@ export async function setupMessageInputListeners(
         }
         // existing chat
         else {
+          console.log(sentMsg);
+          renderDummyChatMsg(
+            sentMsg,
+            userAuth.currentUser.displayName.toLowerCase(),
+            userAuth,
+            chatStartingPoint
+          );
           await handleContinuousSendMessage(sendMessageInput, userAuth, chatId);
+          resolve(true);
         }
       }
     });
@@ -217,12 +223,6 @@ export async function handleFirstSendMessage(
 
   await addToTalkedWith(currentUser, selectedUserId.toLowerCase(), chatRef.id);
 
-  // realChat(user.profilePic, user.name, chatRef.id, messagesSection);
-
-  // let startPoint = document.querySelector(".chat-start-point");
-
-  // renderFirstMsg(user, startPoint, sentMessage, "sent");
-
   return true;
 }
 
@@ -233,14 +233,6 @@ export async function handleContinuousSendMessage(inputEl, userAuth, chatId) {
   inputEl.value = "";
 
   const currentUser = userAuth.currentUser.displayName.toLowerCase();
-
-  // const chatRef = await createDoc("chats", {
-  //   isGroup: false,
-  //   lastMessage: {
-  //     content: sentMessage,
-  //     timestamp: formattedTimestamp(),
-  //   },
-  // });
 
   const messageId = crypto.randomUUID();
   const messageRef = doc(db, "chats", chatId, "messages", messageId);
@@ -409,6 +401,40 @@ export function renderChatMsg(
   }
 }
 
+export function renderDummyChatMsg(
+  sentMessage,
+  yourUserId,
+  userAuth,
+  chatStartingPoint
+) {
+  // if the message sent by you
+  if (yourUserId) {
+    if (document.querySelector(".friend-message-section"))
+      document
+        .querySelector(".friend-message-section")
+        .classList.remove("friend-message-section");
+
+    // if the last user who sent the message is not you (starting from the first of the messages)
+    if (getSenderId() !== yourUserId) {
+      yourMessageContainer(userAuth.currentUser.photoURL, chatStartingPoint);
+      firstYourMessage(
+        sentMessage,
+        "sending",
+        document.querySelector(".your-msg-container")
+      );
+      setSenderId(yourUserId);
+    }
+    // if the last user who sent the message is sent by you
+    else {
+      continuousYourMessage(
+        sentMessage,
+        "sending",
+        document.querySelector(".your-msg-container")
+      );
+    }
+  }
+}
+
 export function getSenderId() {
   return JSON.parse(sessionStorage.getItem("lastSenderId")) || "";
 }
@@ -435,6 +461,9 @@ export function listenToNewMessages(
         const messageData = change.doc.data();
 
         if (!messageData.timestamp) return;
+
+        if (document.querySelector(".dummy"))
+          document.querySelector(".dummy").closest(".pb-4").remove();
 
         const message = {
           id: change.doc.id,

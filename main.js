@@ -70,7 +70,7 @@ observeAuthState(async (user) => {
     chatSectionEmpty,
     loadingChatList,
     (updatedUsers) => {
-      currUserTalkedWith = updatedUsers;
+      currUserTalkedWith = updatedUsers || [];
       setTimeout(() => {
         newChat.classList.remove("hidden");
       }, 500);
@@ -108,6 +108,7 @@ newChatSearch.addEventListener("input", async () => {
   if (newChatSearch.value !== "") {
     foundedUsersDiv.innerHTML = "";
 
+    console.log(currUserTalkedWith);
     let cannotTalkWith = currUserTalkedWith.map((user) => user.name);
 
     filteredUsers = allUsers
@@ -152,12 +153,9 @@ document.addEventListener("click", async (e) => {
     let currentSelectedUserId = friendRef.dataset.userid;
     let yourUserId = userAuth.currentUser.displayName.toLowerCase();
 
-    console.log("currUserTalkedWith", currUserTalkedWith);
     let selectedUser = currUserTalkedWith.find(
       (user) => user.name.toLowerCase() === currentSelectedUserId
     );
-
-    console.log("selectedUser", selectedUser);
 
     // create real chat
     realChat(
@@ -192,9 +190,6 @@ document.addEventListener("click", async (e) => {
       currentSelectedUserId,
       userAuth,
       messagesSection,
-      allChatSection,
-      chatSectionEmpty,
-      loadingChatList,
       chatStartingPoint,
       currentChatId
     );
@@ -217,9 +212,6 @@ document.addEventListener("click", async (e) => {
     selectedUserId,
     userAuth,
     messagesSection,
-    allChatSection,
-    chatSectionEmpty,
-    loadingChatList,
     chatStartingPoint,
     serverTimestamp()
   );

@@ -23,7 +23,9 @@ export function yourMessageContainer(yourPhoto, container) {
 
 export function firstYourMessage(yourMsg, sentTime, container) {
   let msgContainerHTML = `
-    <div class="w-max max-w-xs xl:max-w-md grid mb-2 ml-auto">
+    <div class="${
+      sentTime === "sending" ? "dummy" : ""
+    } w-max max-w-xs xl:max-w-md grid mb-2 ml-auto">
         <h5
         class="text-right text-white text-sm font-semibold leading-snug pb-1"
         >
