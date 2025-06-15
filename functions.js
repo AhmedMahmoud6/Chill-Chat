@@ -571,13 +571,8 @@ export function listenToTalkingWithStatus(selectedUserId, callback) {
 
   const unsubscribe = onSnapshot(userDocRef, async (docSnapShot) => {
     if (docSnapShot.exists()) {
-      console.log("test");
       const data = docSnapShot.data();
-      callback(
-        data.status,
-        data.lastSeen,
-        document.querySelector(".contact-status")
-      );
+      callback(data.status, data.lastSeen);
     }
   });
 

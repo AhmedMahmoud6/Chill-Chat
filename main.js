@@ -159,8 +159,13 @@ document.addEventListener("click", async (e) => {
 
     // update user status (online, offline)
     unsubscribeFromUserStatus = listenToTalkingWithStatus(
-      selectedUser.name,
-      handleUserStatus
+      selectedUser.name.toLowerCase(),
+      (status, lastSeen) =>
+        handleUserStatus(
+          status,
+          lastSeen,
+          document.querySelector(".contact-status")
+        )
     );
 
     // update the chatStartingPoint
