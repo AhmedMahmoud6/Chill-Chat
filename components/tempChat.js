@@ -17,7 +17,7 @@ export function tempChat(userImg, username, userid, messagesSection) {
                     alt="profile-pic"
                   />
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col min-w-0">
                 <h1 class="contact-name text-sm text-white truncate">${username}</h1>
                 <h1 class="contact-status text-sm text-gray-400 truncate">Loading...</h1>
                 </div>
