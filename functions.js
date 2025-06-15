@@ -133,7 +133,6 @@ export async function setupMessageInputListeners(
         }
       }
     });
-    console.log(sendCurrentMessageIcon);
     sendCurrentMessageIcon.addEventListener("click", async () => {
       if (sendMessageInput.value.trim() === "") return;
       const sentMsg = sendMessageInput.value;
