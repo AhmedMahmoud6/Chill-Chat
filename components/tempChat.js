@@ -17,7 +17,10 @@ export function tempChat(userImg, username, userid, messagesSection) {
                     alt="profile-pic"
                   />
                 </div>
-                <h1 class="contact-name text-white">${username}</h1>
+                <div class="flex flex-col">
+                <h1 class="contact-name text-sm text-white truncate">${username}</h1>
+                <h1 class="contact-status text-sm text-gray-400 truncate">Loading...</h1>
+                </div>
               </div>
               <div class="contact-more cursor-pointer p-2">
                 <i class="fa-solid fa-ellipsis-vertical text-white text-xl"></i>

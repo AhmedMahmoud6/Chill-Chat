@@ -8,11 +8,16 @@ import {
   getDocs,
   collection,
   updateDocument,
+  updateDoc,
   serverTimestamp,
   query,
   orderBy,
   onSnapshot,
   where,
+  ref,
+  onDisconnect,
+  set,
+  rtdb,
 } from "./firebase-auth.js";
 import { createFriendInChatList } from "./components/renderFriendChatList.js";
 import {
@@ -561,6 +566,33 @@ export function listenToLastMsg(yourUserId, updateUi) {
   return unsubscribe;
 }
 
+export function listenToTalkingWithStatus(selectedUserId, callback) {
+  const userDocRef = doc(db, "users", selectedUserId);
+
+  const unsubscribe = onSnapshot(userDocRef, async (docSnapShot) => {
+    if (docSnapShot.exists()) {
+      console.log("test");
+      const data = docSnapShot.data();
+      callback(
+        data.status,
+        data.lastSeen,
+        document.querySelector(".contact-status")
+      );
+    }
+  });
+
+  return unsubscribe;
+}
+
+export function handleUserStatus(status, lastSeen, statusElement) {
+  if (status === "online") {
+    statusElement.textContent = "Online";
+  } else {
+    const lastSeenDate = lastSeen?.toDate?.();
+    statusElement.textContent = `Last seen: ${lastSeenDate?.toLocaleString()}`;
+  }
+}
+
 export function scrollToBottom() {
   const messagesContainer = document.querySelector(".chat");
   if (messagesContainer) {
@@ -617,6 +649,50 @@ export function triggerChatMobileView(chatsSection, sideSection) {
       );
     });
   }
+}
+
+export async function setUserOnline(userId) {
+  const userRef = doc(db, "users", userId);
+  await updateDoc(userRef, {
+    status: "online",
+    lastSeen: serverTimestamp(),
+  });
+}
+
+export function setupPresence(userId) {
+  const userStatusDatabaseRef = ref(rtdb, `/status/${userId}`);
+  const userStatusFirestoreRef = doc(db, "users", userId);
+
+  // Values for Realtime DB
+  const isOfflineForRTDB = {
+    state: "offline",
+    lastChanged: serverTimestamp(),
+  };
+  const isOnlineForRTDB = {
+    state: "online",
+    lastChanged: serverTimestamp(),
+  };
+
+  // Values for Firestore
+  const isOfflineForFirestore = {
+    status: "offline",
+    lastSeen: serverTimestamp(),
+  };
+  const isOnlineForFirestore = {
+    status: "online",
+    lastSeen: serverTimestamp(),
+  };
+
+  onDisconnect(userStatusDatabaseRef).set(isOfflineForRTDB);
+
+  // When online, update both
+  set(userStatusDatabaseRef, isOnlineForRTDB);
+  setDoc(userStatusFirestoreRef, isOnlineForFirestore, { merge: true });
+
+  // Handle tab closing explicitly
+  window.addEventListener("beforeunload", () => {
+    setDoc(userStatusFirestoreRef, isOfflineForFirestore, { merge: true });
+  });
 }
 
 export function getTime(timestamp) {

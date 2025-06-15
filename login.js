@@ -3,12 +3,21 @@ import {
   isValidPassword,
   checkPasswordLength,
   validateFields,
+  setUserOnline,
 } from "./functions.js";
 
 import {
   signInWithEmail,
   getFriendlyErrorMessage,
   observeAuthState,
+  db,
+  doc,
+  updateDoc,
+  serverTimestamp,
+  ref,
+  onDisconnect,
+  set,
+  rtdb,
 } from "./firebase-auth.js";
 
 let email = document.querySelector(".email-sign-in");
@@ -18,7 +27,12 @@ let passwordError = document.querySelector(".pass-sign-in-error");
 let signInBtn = document.querySelector(".sign-in");
 let signInValidationMsg = document.querySelector(".sign-in-validation");
 
-observeAuthState((user) => (user ? window.location.replace("main.html") : ""));
+observeAuthState(async (user) => {
+  if (user) {
+    await setUserOnline(user.displayName.toLowerCase());
+    // window.location.replace("main.html");
+  }
+});
 
 signInBtn.addEventListener("click", async () => {
   if (

@@ -14,6 +14,7 @@ import {
   updateProfile,
   auth,
   getAllUserNames,
+  serverTimestamp,
 } from "./firebase-auth.js";
 
 let fullName = document.querySelector(".full-name");
@@ -72,6 +73,8 @@ signUpButton.addEventListener("click", async () => {
         email: email.value,
         profilePic:
           "https://i.pinimg.com/736x/e6/e4/df/e6e4df26ba752161b9fc6a17321fa286.jpg",
+        status: "online",
+        lastSeen: serverTimestamp(),
       });
 
       await updateProfile(auth.currentUser, {

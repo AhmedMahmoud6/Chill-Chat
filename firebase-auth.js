@@ -28,6 +28,13 @@ import {
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
 
+import {
+  getDatabase,
+  ref,
+  onDisconnect,
+  set,
+} from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCt1vcjo9Eu_MxnZjh-0DvlyYeitWR4quQ",
   authDomain: "chill-chat-46b6a.firebaseapp.com",
@@ -42,9 +49,10 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const rtdb = getDatabase(app);
 
 // EXPORTS
-export { auth, updateProfile };
+export { auth, updateProfile, updateDoc, rtdb, set, onDisconnect, ref };
 
 // Collection and Document references
 export const getCollectionRef = (colName) => collection(db, colName);

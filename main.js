@@ -18,6 +18,9 @@ import {
   listenToLastMsg,
   getTime,
   triggerChatMobileView,
+  setupPresence,
+  listenToTalkingWithStatus,
+  handleUserStatus,
 } from "./functions.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
@@ -38,6 +41,7 @@ let sideSection = document.querySelector(".side-section");
 let chatStartingPoint;
 
 let unsubscribeFromMessages = null;
+let unsubscribeFromUserStatus = null;
 let userAuth = auth;
 let allUsers;
 let filteredUsers;
@@ -48,6 +52,8 @@ observeAuthState(async (user) => {
   if (!user) return;
 
   const userDisplayName = user.displayName.toLowerCase();
+
+  setupPresence(userDisplayName);
   setSenderId("");
   listenToTalkedWith(
     userDisplayName,
@@ -133,10 +139,11 @@ document.addEventListener("click", async (e) => {
   // if clicked on friend in the chatlist
   if (friendRef) {
     if (unsubscribeFromMessages) unsubscribeFromMessages();
+    if (unsubscribeFromUserStatus) unsubscribeFromUserStatus();
+
     let currentChatId = friendRef.dataset.chatid;
     let currentSelectedUserId = friendRef.dataset.userid;
     let yourUserId = userAuth.currentUser.displayName.toLowerCase();
-
     let selectedUser = currUserTalkedWith.find(
       (user) => user.name.toLowerCase() === currentSelectedUserId
     );
@@ -149,6 +156,12 @@ document.addEventListener("click", async (e) => {
       messagesSection
     );
     document.querySelector(".send-message-input").focus();
+
+    // update user status (online, offline)
+    unsubscribeFromUserStatus = listenToTalkingWithStatus(
+      selectedUser.name,
+      handleUserStatus
+    );
 
     // update the chatStartingPoint
     chatStartingPoint = document.querySelector(".chat-start-point");
