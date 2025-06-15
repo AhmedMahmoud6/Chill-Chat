@@ -21,6 +21,7 @@ import {
   setupPresence,
   listenToTalkingWithStatus,
   handleUserStatus,
+  listenToUserChatsForNotifications,
 } from "./functions.js";
 
 import { displayFoundedUsers } from "./components/newChat.js";
@@ -42,6 +43,8 @@ let chatStartingPoint;
 
 let unsubscribeFromMessages = null;
 let unsubscribeFromUserStatus = null;
+let stopListeningToMessagesAudio = null;
+
 let userAuth = auth;
 let allUsers;
 let filteredUsers;
@@ -82,6 +85,9 @@ observeAuthState(async (user) => {
       FriendLastMsgTime.textContent = getTime(updatedDetails.timestamp);
     }
   });
+
+  stopListeningToMessagesAudio =
+    listenToUserChatsForNotifications(userDisplayName);
 });
 
 // open search users

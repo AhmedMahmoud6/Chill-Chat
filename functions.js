@@ -18,6 +18,7 @@ import {
   onDisconnect,
   set,
   rtdb,
+  limit,
 } from "./firebase-auth.js";
 import { createFriendInChatList } from "./components/renderFriendChatList.js";
 import {
@@ -467,6 +468,9 @@ export function listenToNewMessages(
 ) {
   const messagesRef = collection(db, "chats", chatId, "messages");
   const q = query(messagesRef, orderBy("timestamp", "asc"));
+  const InChatSound = new Audio("/sounds/current-chat.mp3");
+  const notInChatSound = new Audio("/sounds/new-notification-017-352293.mp3");
+
   let isFirstLoad = true;
 
   const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -479,6 +483,11 @@ export function listenToNewMessages(
         id: change.doc.id,
         ...change.doc.data(),
       };
+
+      const isFromOtherUser = message.sentFrom !== yourUserId;
+      const isViewingCurrentChat =
+        document.querySelector(".real-chat")?.dataset?.chatid === chatId;
+
       if (isFirstLoad) {
         renderSingleMessage(
           message,
@@ -489,6 +498,10 @@ export function listenToNewMessages(
           currentSelectedUserId
         );
       } else {
+        // play sound when in chat and sent from the other user
+        if (isFromOtherUser && isViewingCurrentChat) {
+          InChatSound.play();
+        }
         renderSingleMessage(
           message,
           yourUserId,
@@ -551,7 +564,6 @@ export function listenToLastMsg(yourUserId, updateUi) {
         if (!chat.lastMessage.timestamp) return;
 
         const chatId = change.doc.id;
-
         if (chat.lastMessage) {
           const updateDetails = {
             chatId,
@@ -688,6 +700,56 @@ export function setupPresence(userId) {
   window.addEventListener("beforeunload", () => {
     setDoc(userStatusFirestoreRef, isOfflineForFirestore, { merge: true });
   });
+}
+
+export async function listenToUserChatsForNotifications(yourUserId) {
+  const chatQuery = query(
+    collection(db, "chats"),
+    where("participants", "array-contains", yourUserId)
+  );
+
+  const chatDocs = await getDocs(chatQuery);
+  const unsubscribeFns = [];
+
+  chatDocs.forEach((chatDoc) => {
+    const chatId = chatDoc.id;
+
+    const messagesRef = collection(db, "chats", chatId, "messages");
+    const q = query(messagesRef, orderBy("timestamp", "desc"), limit(1));
+    let hasLoadedFirstMessage = false;
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          const message = change.doc.data();
+          const isFromOtherUser = message.sentFrom !== yourUserId;
+
+          // Get current chat the user is viewing (based on .real-chat div)
+          const currentChatId =
+            document.querySelector(".real-chat")?.dataset?.chatid;
+
+          const isViewingThisChat = currentChatId === chatId;
+
+          if (!hasLoadedFirstMessage) {
+            // ✅ Skip first load
+            hasLoadedFirstMessage = true;
+            return;
+          }
+
+          if (isFromOtherUser && !isViewingThisChat) {
+            new Audio("./sounds/new-notification-017-352293.mp3").play();
+          }
+        }
+      });
+    });
+
+    unsubscribeFns.push(unsubscribe);
+  });
+
+  // Return a cleanup function to stop all listeners
+  return () => {
+    unsubscribeFns.forEach((unsub) => unsub());
+  };
 }
 
 export function getTime(timestamp) {
