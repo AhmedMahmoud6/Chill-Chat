@@ -469,7 +469,6 @@ export function listenToNewMessages(
   const messagesRef = collection(db, "chats", chatId, "messages");
   const q = query(messagesRef, orderBy("timestamp", "asc"));
   const InChatSound = new Audio("/Chill-Chat/sounds/current-chat.mp3");
-  // const notInChatSound = new Audio("/sounds/new-notification-017-352293.mp3");
 
   let isFirstLoad = true;
 
@@ -737,7 +736,6 @@ export async function listenToUserChatsForNotifications(yourUserId) {
           }
 
           if (isFromOtherUser && !isViewingThisChat) {
-            // new Audio("./sounds/new-notification-017-352293.mp3").play();
             new Audio(
               "/Chill-Chat/sounds/new-notification-017-352293.mp3"
             ).play();
