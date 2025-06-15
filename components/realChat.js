@@ -6,7 +6,7 @@ export function realChat(userImg, username, chatId, messagesSection) {
             data-chatid="${chatId}"
           >
             <div
-              class="contact-info relative bg-[#49494c] w-full h-16 flex justify-between items-center px-8"
+              class="contact-info relative bg-[#49494c] w-full h-16 flex justify-between items-center px-8 max-[440px]:px-2"
             >
               <div class="contact-title flex gap-4 items-center min-w-0">
               <button class="back w-11 h-11 flex justify-center items-center bg-gray-400/0 cursor-pointer focus:bg-gray-400/50 rounded-lg text-2xl text-white hidden"><i class="fa-solid fa-left-long"></i></button>
@@ -19,10 +19,10 @@ export function realChat(userImg, username, chatId, messagesSection) {
                 </div>
                 <div class="flex flex-col min-w-0">
                 <h1 class="contact-name text-sm text-white truncate">${username}</h1>
-                <h1 class="contact-status text-sm text-gray-400 truncate">Loading...</h1>
+                <h1 class="contact-status text-sm max-[440px]:text-xs text-gray-400 truncate">Loading...</h1>
                 </div>
               </div>
-              <div class="contact-more cursor-pointer p-2">
+              <div class="contact-more cursor-pointer p-2 max-[440px]:hidden">
                 <i class="fa-solid fa-ellipsis-vertical text-white text-xl"></i>
               </div>
             </div>
