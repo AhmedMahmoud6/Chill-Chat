@@ -30,7 +30,7 @@ let signInValidationMsg = document.querySelector(".sign-in-validation");
 observeAuthState(async (user) => {
   if (user) {
     await setUserOnline(user.displayName.toLowerCase());
-    // window.location.replace("main.html");
+    window.location.replace("main.html");
   }
 });
 
