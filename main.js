@@ -6,6 +6,9 @@ import {
   getDocs,
   collection,
   serverTimestamp,
+  logoutUser,
+  updateDoc,
+  doc,
 } from "./firebase-auth.js";
 
 import {
@@ -40,6 +43,10 @@ let loadingChatList = document.querySelector(".loading-chat-list");
 let chatsSection = document.querySelector(".chats-section");
 let sideSection = document.querySelector(".side-section");
 let chatStartingPoint;
+let settingsDiv = document.querySelector(".settings");
+let settingsContainer = document.querySelector(".settings-container");
+let chatDiv = document.querySelector(".chats");
+let logOut = document.querySelector(".logout");
 
 let unsubscribeFromMessages = null;
 let unsubscribeFromUserStatus = null;
@@ -236,4 +243,30 @@ document.addEventListener("click", async (e) => {
       friendToClick.click();
     }
   }
+});
+
+settingsDiv.addEventListener("click", () => {
+  chatDiv.classList.remove("active");
+  settingsDiv.classList.add("active");
+  settingsContainer.classList.remove("hidden");
+  chatsSection.classList.add("hidden");
+});
+
+chatDiv.addEventListener("click", () => {
+  chatDiv.classList.add("active");
+  settingsDiv.classList.remove("active");
+  settingsContainer.classList.add("hidden");
+  chatsSection.classList.remove("hidden");
+});
+
+logOut.addEventListener("click", async () => {
+  const userDisplayName = userAuth.currentUser.displayName.toLowerCase();
+  await logoutUser();
+
+  const userRef = doc(db, "users", userDisplayName);
+  await updateDoc(userRef, {
+    status: "offline",
+    lastSeen: serverTimestamp(),
+  });
+  window.location.replace("index.html");
 });

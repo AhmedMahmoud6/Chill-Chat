@@ -31,6 +31,7 @@ import {
 import {
   getDatabase,
   ref,
+  onValue,
   onDisconnect,
   set,
 } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-database.js";
@@ -52,7 +53,16 @@ const db = getFirestore(app);
 const rtdb = getDatabase(app);
 
 // EXPORTS
-export { auth, updateProfile, updateDoc, rtdb, set, onDisconnect, ref };
+export {
+  auth,
+  updateProfile,
+  updateDoc,
+  rtdb,
+  set,
+  onDisconnect,
+  ref,
+  onValue,
+};
 
 // Collection and Document references
 export const getCollectionRef = (colName) => collection(db, colName);
