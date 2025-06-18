@@ -78,6 +78,9 @@ observeAuthState(async (user) => {
     }
   );
 
+  stopListeningToMessagesAudio =
+    listenToUserChatsForNotifications(userDisplayName);
+
   listenToLastMsg(userDisplayName, async (updatedDetails) => {
     let waiting = await waitForFriend("", updatedDetails.chatId);
 
@@ -92,9 +95,6 @@ observeAuthState(async (user) => {
       FriendLastMsgTime.textContent = getTime(updatedDetails.timestamp);
     }
   });
-
-  stopListeningToMessagesAudio =
-    listenToUserChatsForNotifications(userDisplayName);
 });
 
 // open search users
